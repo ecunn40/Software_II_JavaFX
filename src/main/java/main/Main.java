@@ -1,5 +1,6 @@
 package main;
 
+import Database.CustomersQuery;
 import Database.JDBC;
 import controller.LogInController;
 import javafx.application.Application;
@@ -58,6 +59,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         JDBC.openConnection();
+        CustomersQuery.showCustomers();
         launch();
         JDBC.closeConnection();
     }
