@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public abstract class CustomersQuery {
     public static void fillCustomerTable(TableView tableView){
         try {
-            String sql = "SELECT * FROM customers";
+            String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
@@ -21,7 +21,7 @@ public abstract class CustomersQuery {
                 int customer_id = rs.getInt(1);
                 String customer_name = rs.getString(2);
                 String address = rs.getString(3);
-                int postal_code = rs.getInt(4);
+                String postal_code = rs.getString(4);
                 String phone = rs.getString(5);
                 int division_id = rs.getInt(6);
 

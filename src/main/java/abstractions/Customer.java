@@ -5,11 +5,11 @@ public class Customer {
     private int customer_id;
     private String customer_name;
     private String address;
-    private int postal_code;
+    private String postal_code;
     private String phone;
     private int division_id;
 
-    public Customer(int customer_id, String customer_name, String address, int postal_code, String phone, int division_id) {
+    public Customer(int customer_id, String customer_name, String address, String postal_code, String phone, int division_id) {
         this.customer_id = customer_id;
         this.customer_name = customer_name;
         this.address = address;
@@ -42,11 +42,11 @@ public class Customer {
         this.address = address;
     }
 
-    public int getPostal_code() {
+    public String getPostal_code() {
         return postal_code;
     }
 
-    public void setPostal_code(int postal_code) {
+    public void setPostal_code(String postal_code) {
         this.postal_code = postal_code;
     }
 
