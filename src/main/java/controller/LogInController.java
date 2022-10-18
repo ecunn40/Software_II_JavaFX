@@ -1,17 +1,13 @@
 package controller;
 
-import javafx.application.Application;
+import database.JDBC;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
 import main.Main;
 
 import java.io.IOException;
@@ -27,9 +23,13 @@ public class LogInController extends Main implements Initializable {
     @FXML
     private Text title;
     @FXML
-    private Label username;
+    private Label usernameLabel;
     @FXML
-    private Label password;
+    private TextField usernameField;
+    @FXML
+    private Label passwordLabel;
+    @FXML
+    private TextField passwordField;
     @FXML
     private Label location;
     @FXML
@@ -41,10 +41,10 @@ public class LogInController extends Main implements Initializable {
         if(Locale.getDefault().getLanguage().equals("fr")) {
             title.setText(rb.getString("Login"));
             title.setLayoutX(160.0);
-            username.setText(rb.getString("username"));
-            username.setLayoutX(100.0);
-            password.setText(rb.getString("password"));
-            password.setLayoutX(125.0);
+            usernameLabel.setText(rb.getString("username"));
+            usernameLabel.setLayoutX(100.0);
+            passwordLabel.setText(rb.getString("password"));
+            passwordLabel.setLayoutX(125.0);
             location.setText(rb.getString("location" + ": " + ZoneId.systemDefault()));
             loginButton.setText(rb.getString("Login"));
         }
@@ -53,6 +53,13 @@ public class LogInController extends Main implements Initializable {
 
     @FXML
     protected void LogIn(ActionEvent actionEvent) throws IOException {
+        JDBC.openConnection();
         loadFile(actionEvent, "Customers.fxml");
+//        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
+//            JDBC.openConnection();
+//            loadFile(actionEvent, "Customers.fxml");
+//        }
+//        else
+//            makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
     }
 }

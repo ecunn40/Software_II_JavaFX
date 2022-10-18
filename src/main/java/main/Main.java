@@ -1,22 +1,19 @@
 package main;
 
-import Database.CustomersQuery;
-import Database.JDBC;
-import controller.LogInController;
+import abstractions.Customer;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class Main extends Application {
 
@@ -28,7 +25,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/LogIn.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("");
         stage.setScene(scene);
@@ -50,7 +47,7 @@ public class Main extends Application {
         }
     }
 
-    public void makeAlert(Alert.AlertType alertType, String alertTitle, String alertMsg){
+    public static void makeAlert(Alert.AlertType alertType, String alertTitle, String alertMsg){
         Alert alert = new Alert(alertType);
         alert.setTitle(alertTitle);
         alert.setContentText(alertMsg);
@@ -58,9 +55,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        JDBC.openConnection();
-        CustomersQuery.showCustomers();
         launch();
-        JDBC.closeConnection();
     }
 }
