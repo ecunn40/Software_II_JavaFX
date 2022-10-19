@@ -43,8 +43,6 @@ public class CustomerController extends Main implements Initializable {
         postal_code_column.setCellValueFactory(new PropertyValueFactory<>("postal_code"));
         phone_column.setCellValueFactory(new PropertyValueFactory<>("phone"));
         division_id_column.setCellValueFactory(new PropertyValueFactory<>("division_id"));
-
-        CustomersQuery.fillCustomerTable(customersTable);
     }
 
     @FXML

@@ -15,4 +15,8 @@ public class Customers {
     public static void addCustomer(Customer customer){
         allCustomers.add(customer);
     }
+
+    public static void removeCustomer(Customer customer) {allCustomers.remove(customer);}
+
+    public static void removeAllCustomers(){ allCustomers.clear(); }
 }

@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class CustomersQuery {
-    public static void fillCustomerTable(TableView tableView){
+    public static void fillCustomerTable(){
         try {
             String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers";
 
@@ -32,4 +32,5 @@ public abstract class CustomersQuery {
             throwables.printStackTrace();
         }
     }
+
 }

@@ -63,7 +63,7 @@
             <ComboBox layoutX="10.0" layoutY="150.0" prefWidth="150.0" />
          </children>
       </VBox>
-      <Button layoutX="55.0" layoutY="378.0" mnemonicParsing="false" text="Save" />
+      <Button onAction="#onSaveButtonClick" layoutX="55.0" layoutY="378.0" mnemonicParsing="false" text="Save" />
       <Button onAction="#onCancelButtonClick" layoutX="170.0" layoutY="378.0" mnemonicParsing="false" text="Cancel" />
    </children>
 </Pane>
