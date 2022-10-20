@@ -38,7 +38,7 @@ public abstract class CustomersQuery {
     public static void insertCustomer(Customer customer){
         try {
             System.out.println(customer.getCustomer_id());
-            String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_Id) VALUES(?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_Id) VALUES(NULL, ?, ?, ?, ?, ?)";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
@@ -58,12 +58,27 @@ public abstract class CustomersQuery {
 
     public static void updateCustomer(Customer customer){
         try {
-            String sql = "UPDATE CUSTOMERS SET Customer_Name = ? WHERE Customer_ID = ?";
+            String sqlName = "UPDATE CUSTOMERS SET Customer_Name = ? WHERE Customer_ID = ?";
+            String sqlAdd = "UPDATE CUSTOMERS SET Address = ? WHERE Customer_ID = ?";
+            String sqlPost = "UPDATE CUSTOMERS SET Postal_Code = ? WHERE Customer_ID = ?";
+            String sqlPhone = "UPDATE CUSTOMERS SET Phone = ? WHERE Customer_ID = ?";
 
-            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sqlName);
+            PreparedStatement psAdd = JDBC.getConnection().prepareStatement(sqlAdd);
+            PreparedStatement psPost = JDBC.getConnection().prepareStatement(sqlPost);
+            PreparedStatement psPhone = JDBC.getConnection().prepareStatement(sqlPhone);
             ps.setString(1, customer.getCustomer_name());
+            psAdd.setString(1, selectedCustomer.getAddress());
+            psPost.setString(1, selectedCustomer.getPostal_code());
+            psPhone.setString(1, selectedCustomer.getPhone());
             ps.setInt(2, selectedCustomer.getCustomer_id());
+            psAdd.setInt(2, selectedCustomer.getCustomer_id());
+            psPost.setInt(2, selectedCustomer.getCustomer_id());
+            psPhone.setInt(2, selectedCustomer.getCustomer_id());
             ps.execute();
+            psAdd.execute();
+            psPost.execute();
+            psPhone.execute();
 
         } catch(SQLException throwables){
             throwables.printStackTrace();
