@@ -2,6 +2,7 @@ package controller;
 
 import abstractions.Customer;
 import countries.Countries;
+import database.CustomersQuery;
 import exceptions.Exceptions;
 import firstleveldivisions.Provinces;
 import firstleveldivisions.Regions;
@@ -17,10 +18,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static controller.CustomerController.addingCustomer;
+import static controller.CustomerController.selectedCustomer;
+
 public class AddCustomerController extends Main implements Initializable {
 
     @FXML
-    private int customerId = 1;
+    private int customerId;
     @FXML
     private TextField nameInput;
     @FXML
@@ -30,7 +34,7 @@ public class AddCustomerController extends Main implements Initializable {
     @FXML
     private TextField phoneInput;
     @FXML
-    private TextField divisionIdInput;
+    private int divisionId;
 
     @FXML
     private ComboBox<String> countryComboBox;
@@ -39,9 +43,24 @@ public class AddCustomerController extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        countryComboBox.setPromptText("Choose a Country");
-        countryComboBox.setItems(Countries.getAllCountries());
+        if(addingCustomer){
+            countryComboBox.setPromptText("Choose a Country");
+            countryComboBox.setItems(Countries.getAllCountries());
+        }
+        else
+        {
+            System.out.println(selectedCustomer.getCustomer_id());
+            setCustomerData(selectedCustomer);
+        }
     }
+
+    private void setCustomerData(Customer customer){
+        nameInput.setText(customer.getCustomer_name());
+        addressInput.setText(customer.getAddress());
+        postalCodeInput.setText(customer.getPostal_code());
+        phoneInput.setText(customer.getPhone());
+    }
+
     @FXML
     public void onCountrySelected(ActionEvent event){
         String selectedCountry = countryComboBox.getSelectionModel().getSelectedItem();
@@ -71,18 +90,23 @@ public class AddCustomerController extends Main implements Initializable {
         String address;
         String postal_code;
         String phone;
-        int divisionId;
 
         try{
             customerName = Exceptions.validateString(nameInput);
             address = Exceptions.validateString(addressInput);
             postal_code = Exceptions.validateString(postalCodeInput);
             phone = Exceptions.validateString(phoneInput);
-            divisionId = Exceptions.validateAndParseId(divisionIdInput);
 
-            Customer customer = new Customer(customerId, customerName,address,postal_code,phone,divisionId);
-            Customers.addCustomer(customer);
-            customerId++;
+            if(addingCustomer){
+                Customer customer = new Customer(Customers.getAllCustomers().size() + 1, customerName, address, postal_code, phone, divisionId);
+                //Customers.addCustomer(customer);
+                CustomersQuery.insertCustomer(customer);
+            } else{
+                Customer customer = new Customer(selectedCustomer.getCustomer_id(), customerName, address, postal_code, phone, selectedCustomer.getDivision_id());
+                Customers.updateCustomer(selectedCustomer.getCustomer_id() - 1, customer);
+                CustomersQuery.updateCustomer(customer);
+            }
+
         } catch (Exception e){
             return;
         }

@@ -1,10 +1,12 @@
 package controller;
 
+import abstractions.Customer;
 import database.CustomersQuery;
 import database.JDBC;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,6 +18,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CustomerController extends Main implements Initializable {
+
+    public static boolean addingCustomer = true;
+
+    public static Customer selectedCustomer = null;
 
     @FXML
     private TableView customersTable;
@@ -34,7 +40,9 @@ public class CustomerController extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        if(Customers.getAllCustomers().size() == 0){
+            CustomersQuery.fillCustomerTable();
+        }
         customersTable.setItems(Customers.getAllCustomers());
 
         customer_id_column.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
@@ -52,11 +60,19 @@ public class CustomerController extends Main implements Initializable {
     }
     @FXML
     public void onAddButtonClicked(ActionEvent event) throws IOException {
+        addingCustomer = true;
         loadFile(event, ADD_CUSTOMER_FORM);
     }
     @FXML
     public void onUpdateButtonClicked(ActionEvent event) throws IOException {
-        loadFile(event, ADD_CUSTOMER_FORM);
+        addingCustomer = false;
+        try{
+            selectedCustomer = (Customer) customersTable.getSelectionModel().getSelectedItem();
+            addingCustomer = false;
+            loadFile(event, ADD_CUSTOMER_FORM);
+        } catch (Exception e){
+            makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
+        }
     }
     @FXML
     public void onDeleteButtonClicked(){

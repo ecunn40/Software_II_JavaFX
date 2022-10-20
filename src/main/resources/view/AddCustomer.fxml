@@ -55,10 +55,10 @@
       </VBox>
       <VBox layoutX="168.0" layoutY="151.0" prefHeight="134.0" prefWidth="149.0" spacing="10.0">
          <children>
-            <TextField prefWidth="149.0" />
-            <TextField />
-            <TextField />
-            <TextField />
+            <TextField fx:id="nameInput" prefWidth="149.0" />
+            <TextField fx:id="addressInput" />
+            <TextField fx:id="postalCodeInput" />
+            <TextField fx:id="phoneInput"/>
             <ComboBox fx:id="countryComboBox" onAction="#onCountrySelected" prefWidth="150.0" />
             <ComboBox fx:id="stateComboBox" layoutX="10.0" layoutY="150.0" prefWidth="150.0" />
          </children>

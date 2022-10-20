@@ -3,7 +3,6 @@ package firstleveldivisions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public abstract class Provinces {

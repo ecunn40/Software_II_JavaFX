@@ -16,6 +16,10 @@ public class Customers {
         allCustomers.add(customer);
     }
 
+    public static void updateCustomer(int index, Customer customer) {
+        allCustomers.set(index, customer);
+    }
+
     public static void removeCustomer(Customer customer) {allCustomers.remove(customer);}
 
     public static void removeAllCustomers(){ allCustomers.clear(); }
