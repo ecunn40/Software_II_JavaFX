@@ -9,4 +9,8 @@ module com.example.software_ii_javafx {
     opens main to javafx.fxml;
     exports abstractions;
     opens abstractions to javafx.fxml;
+    exports firstleveldivisions;
+    opens firstleveldivisions to javafx.fxml;
+    exports countries;
+    opens countries to javafx.fxml;
 }
