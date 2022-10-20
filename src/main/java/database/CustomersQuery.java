@@ -37,8 +37,9 @@ public abstract class CustomersQuery {
 
     public static void insertCustomer(Customer customer){
         try {
+            System.out.println(customer.getCustomer_id());
             String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_Id) VALUES(?, ?, ?, ?, ?)";
-4
+
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
             ps.setString(1, customer.getCustomer_name());
@@ -47,7 +48,7 @@ public abstract class CustomersQuery {
             ps.setString(4, customer.getPhone());
             ps.setInt(5, customer.getDivision_id());
 
-            int rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
             //System.out.println(rowsAffected);
 
         } catch(SQLException throwables){
@@ -62,12 +63,18 @@ public abstract class CustomersQuery {
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
             ps.setString(1, customer.getCustomer_name());
             ps.setInt(2, selectedCustomer.getCustomer_id());
-
-            int rowsAffected = ps.executeUpdate();
+            ps.execute();
 
         } catch(SQLException throwables){
             throwables.printStackTrace();
         }
+    }
+
+    public static void deleteCustomer(int customer_id) throws SQLException {
+        String sql = "DELETE FROM CUSTOMERS WHERE Customer_ID = ?";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+        ps.setInt(1, customer_id);
+        ps.execute();
     }
 
 }

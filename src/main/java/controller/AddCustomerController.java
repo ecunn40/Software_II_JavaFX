@@ -99,8 +99,9 @@ public class AddCustomerController extends Main implements Initializable {
 
             if(addingCustomer){
                 Customer customer = new Customer(Customers.getAllCustomers().size() + 1, customerName, address, postal_code, phone, divisionId);
-                //Customers.addCustomer(customer);
                 CustomersQuery.insertCustomer(customer);
+                Customers.addCustomer(customer);
+                System.out.println("Customer Added");
             } else{
                 Customer customer = new Customer(selectedCustomer.getCustomer_id(), customerName, address, postal_code, phone, selectedCustomer.getDivision_id());
                 Customers.updateCustomer(selectedCustomer.getCustomer_id() - 1, customer);
