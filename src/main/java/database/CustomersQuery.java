@@ -36,9 +36,9 @@ public abstract class CustomersQuery {
         return allCustomers;
     }
 
-    public static void insertCustomer(String name, String address, String postalCode, String phoneNumber){
+    public static void insertCustomer(String name, String address, String postalCode, String phoneNumber, int division_id){
         try {
-            String sql = "INSERT INTO customers VALUES(NULL, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL)";
+            String sql = "INSERT INTO customers VALUES(NULL, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?)";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -46,6 +46,7 @@ public abstract class CustomersQuery {
             ps.setString(2, address);
             ps.setString(3, postalCode);
             ps.setString(4, phoneNumber);
+            ps.setInt(5, division_id);
 
             ps.execute();
             //System.out.println(rowsAffected);
@@ -55,29 +56,34 @@ public abstract class CustomersQuery {
         }
     }
 
-    public static void updateCustomer(int customerId,String name, String address, String postalCode, String phoneNumber){
+    public static void updateCustomer(int customerId, String name, String address, String postalCode, String phoneNumber, int division_id){
         try {
             String sqlName = "UPDATE CUSTOMERS SET Customer_Name = ? WHERE Customer_ID = ?";
             String sqlAdd = "UPDATE CUSTOMERS SET Address = ? WHERE Customer_ID = ?";
             String sqlPost = "UPDATE CUSTOMERS SET Postal_Code = ? WHERE Customer_ID = ?";
             String sqlPhone = "UPDATE CUSTOMERS SET Phone = ? WHERE Customer_ID = ?";
+            String sqlDiv = "UPDATE CUSTOMERS SET Division_ID = ? WHERE Customer_ID = ?";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sqlName);
             PreparedStatement psAdd = JDBC.getConnection().prepareStatement(sqlAdd);
             PreparedStatement psPost = JDBC.getConnection().prepareStatement(sqlPost);
             PreparedStatement psPhone = JDBC.getConnection().prepareStatement(sqlPhone);
+            PreparedStatement psDiv = JDBC.getConnection().prepareStatement(sqlDiv);
             ps.setString(1, name);
             psAdd.setString(1, address);
             psPost.setString(1, postalCode);
             psPhone.setString(1, phoneNumber);
+            psDiv.setInt(1, division_id);
             ps.setInt(2, customerId);
             psAdd.setInt(2, customerId);
             psPost.setInt(2, customerId);
             psPhone.setInt(2, customerId);
+            psDiv.setInt(2, division_id);
             ps.execute();
             psAdd.execute();
             psPost.execute();
             psPhone.execute();
+            psDiv.execute();
 
         } catch(SQLException throwables){
             throwables.printStackTrace();
@@ -91,4 +97,16 @@ public abstract class CustomersQuery {
         ps.execute();
     }
 
+    public static int createDivisionId(String state) throws SQLException{
+        int division_id;
+        String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = ?";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+        ps.setString(1, state);
+
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        division_id = rs.getInt(1);
+
+        return division_id;
+    }
 }

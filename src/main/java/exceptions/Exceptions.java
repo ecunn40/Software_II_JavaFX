@@ -1,9 +1,11 @@
 package exceptions;
 
+import database.CustomersQuery;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import main.Main;
 
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -99,6 +101,15 @@ public abstract class Exceptions extends Main {
         if(matchFound) return textField.getText();
         else {
             makeAlert(Alert.AlertType.ERROR, "Invalid Phone Number", "Please enter a valid Phone Number");
+            throw new Exception("Error");
+        }
+    }
+
+    public static int validateState(String selectedState) throws Exception{
+        try{
+            return CustomersQuery.createDivisionId(selectedState);
+        }catch (SQLException sqlException){
+            makeAlert(Alert.AlertType.ERROR, "No State Selected", "Please Choose A State");
             throw new Exception("Error");
         }
     }

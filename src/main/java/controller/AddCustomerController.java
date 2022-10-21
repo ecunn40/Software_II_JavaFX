@@ -10,6 +10,7 @@ import firstleveldivisions.States;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import main.*;
@@ -33,25 +34,21 @@ public class AddCustomerController extends Main implements Initializable {
     private TextField postalCodeInput;
     @FXML
     private TextField phoneInput;
-    @FXML
-    private int divisionId;
 
     @FXML
     private ComboBox<String> countryComboBox;
     @FXML
     private ComboBox<String> stateComboBox;
+    private String selectedCountry = null;
+    private String selectedState = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(addingCustomer){
-            countryComboBox.setPromptText("Choose a Country");
-            countryComboBox.setItems(Countries.getAllCountries());
-        }
-        else
-        {
-            System.out.println(selectedCustomer.getCustomer_id());
+        if(!addingCustomer)
             setCustomerData(selectedCustomer);
-        }
+
+        countryComboBox.setPromptText("Choose a Country");
+        countryComboBox.setItems(Countries.getAllCountries());
     }
 
     private void setCustomerData(Customer customer){
@@ -63,7 +60,7 @@ public class AddCustomerController extends Main implements Initializable {
 
     @FXML
     public void onCountrySelected(ActionEvent event){
-        String selectedCountry = countryComboBox.getSelectionModel().getSelectedItem();
+        selectedCountry = countryComboBox.getValue();
         switch (selectedCountry){
             case "United States":
                 stateComboBox.setItems(States.getAllStates());
@@ -90,18 +87,21 @@ public class AddCustomerController extends Main implements Initializable {
         String address;
         String postal_code;
         String phone;
+        int division_id;
 
         try{
             customerName = Exceptions.validateString(nameInput);
             address = Exceptions.validateString(addressInput);
             postal_code = Exceptions.validateString(postalCodeInput);
             phone = Exceptions.validateString(phoneInput);
-
+            division_id = Exceptions.validateState(stateComboBox.getValue());
+            System.out.println("Selected State: "+ stateComboBox.getValue());
+            System.out.println("Division ID: "+ division_id);
 
             if(addingCustomer)
-                CustomersQuery.insertCustomer(customerName, address, postal_code, phone);
+                CustomersQuery.insertCustomer(customerName, address, postal_code, phone, division_id);
             else
-                CustomersQuery.updateCustomer(selectedCustomer.getCustomer_id(), customerName, address, postal_code, phone);
+                CustomersQuery.updateCustomer(selectedCustomer.getCustomer_id(), customerName, address, postal_code, phone, division_id);
 
         } catch (Exception e){
             return;
@@ -109,4 +109,5 @@ public class AddCustomerController extends Main implements Initializable {
         loadFile(event, CUSTOMER_FORM);
         System.out.println("Saved");
     }
+
 }
