@@ -97,16 +97,11 @@ public class AddCustomerController extends Main implements Initializable {
             postal_code = Exceptions.validateString(postalCodeInput);
             phone = Exceptions.validateString(phoneInput);
 
-            if(addingCustomer){
-                Customer customer = new Customer(Customers.getAllCustomers().size() + 1, customerName, address, postal_code, phone, divisionId);
-                CustomersQuery.insertCustomer(customer);
-                Customers.addCustomer(customer);
-                System.out.println("Customer Added");
-            } else{
-                Customer customer = new Customer(selectedCustomer.getCustomer_id(), customerName, address, postal_code, phone, selectedCustomer.getDivision_id());
-                Customers.updateCustomer(selectedCustomer.getCustomer_id() - 1, customer);
-                CustomersQuery.updateCustomer(customer);
-            }
+
+            if(addingCustomer)
+                CustomersQuery.insertCustomer(customerName, address, postal_code, phone);
+            else
+                CustomersQuery.updateCustomer(selectedCustomer.getCustomer_id(), customerName, address, postal_code, phone);
 
         } catch (Exception e){
             return;

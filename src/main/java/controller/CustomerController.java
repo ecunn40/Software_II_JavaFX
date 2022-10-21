@@ -11,7 +11,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import main.Customers;
 import main.Main;
 
 import java.io.IOException;
@@ -42,10 +41,8 @@ public class CustomerController extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(Customers.getAllCustomers().size() == 0){
-            CustomersQuery.fillCustomerTable();
-        }
-        customersTable.setItems(Customers.getAllCustomers());
+
+        customersTable.setItems(CustomersQuery.getAllCustomers());
 
         customer_id_column.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
         customer_name_column.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
@@ -83,12 +80,11 @@ public class CustomerController extends Main implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
             if(alert.showAndWait().get() == ButtonType.OK){
                 CustomersQuery.deleteCustomer(selectedCustomer.getCustomer_id());
-                Customers.removeCustomer(selectedCustomer);
             }
         } catch (Exception e){
             makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
         }
-        customersTable.setItems(Customers.getAllCustomers());
+        customersTable.setItems(CustomersQuery.getAllCustomers());
     }
     @FXML
     public void onAppointmentsButtonClicked(ActionEvent event) throws IOException {

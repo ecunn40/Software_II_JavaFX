@@ -1,17 +1,17 @@
 package database;
 
 import abstractions.Customer;
-import javafx.scene.control.TableView;
-import main.Customers;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import static controller.CustomerController.selectedCustomer;
+import java.sql.Statement;
 
 public abstract class CustomersQuery {
-    public static void fillCustomerTable(){
+    public static ObservableList getAllCustomers(){
+        ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try {
             String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers";
 
@@ -28,27 +28,26 @@ public abstract class CustomersQuery {
                 int division_Id = rs.getInt(6);
 
                 Customer customer = new Customer(customer_id, customer_name, address, postal_code, phone, division_Id);
-                Customers.addCustomer(customer);
+                allCustomers.add(customer);
             }
         } catch(SQLException throwables){
             throwables.printStackTrace();
         }
+        return allCustomers;
     }
 
-    public static void insertCustomer(Customer customer){
+    public static void insertCustomer(String name, String address, String postalCode, String phoneNumber){
         try {
-            System.out.println(customer.getCustomer_id());
-            String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_Id) VALUES(NULL, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO customers VALUES(NULL, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL)";
 
-            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1, customer.getCustomer_name());
-            ps.setString(2, customer.getAddress());
-            ps.setString(3, customer.getPostal_code());
-            ps.setString(4, customer.getPhone());
-            ps.setInt(5, customer.getDivision_id());
+            ps.setString(1, name);
+            ps.setString(2, address);
+            ps.setString(3, postalCode);
+            ps.setString(4, phoneNumber);
 
-            ps.executeUpdate();
+            ps.execute();
             //System.out.println(rowsAffected);
 
         } catch(SQLException throwables){
@@ -56,7 +55,7 @@ public abstract class CustomersQuery {
         }
     }
 
-    public static void updateCustomer(Customer customer){
+    public static void updateCustomer(int customerId,String name, String address, String postalCode, String phoneNumber){
         try {
             String sqlName = "UPDATE CUSTOMERS SET Customer_Name = ? WHERE Customer_ID = ?";
             String sqlAdd = "UPDATE CUSTOMERS SET Address = ? WHERE Customer_ID = ?";
@@ -67,14 +66,14 @@ public abstract class CustomersQuery {
             PreparedStatement psAdd = JDBC.getConnection().prepareStatement(sqlAdd);
             PreparedStatement psPost = JDBC.getConnection().prepareStatement(sqlPost);
             PreparedStatement psPhone = JDBC.getConnection().prepareStatement(sqlPhone);
-            ps.setString(1, customer.getCustomer_name());
-            psAdd.setString(1, selectedCustomer.getAddress());
-            psPost.setString(1, selectedCustomer.getPostal_code());
-            psPhone.setString(1, selectedCustomer.getPhone());
-            ps.setInt(2, selectedCustomer.getCustomer_id());
-            psAdd.setInt(2, selectedCustomer.getCustomer_id());
-            psPost.setInt(2, selectedCustomer.getCustomer_id());
-            psPhone.setInt(2, selectedCustomer.getCustomer_id());
+            ps.setString(1, name);
+            psAdd.setString(1, address);
+            psPost.setString(1, postalCode);
+            psPhone.setString(1, phoneNumber);
+            ps.setInt(2, customerId);
+            psAdd.setInt(2, customerId);
+            psPost.setInt(2, customerId);
+            psPhone.setInt(2, customerId);
             ps.execute();
             psAdd.execute();
             psPost.execute();
