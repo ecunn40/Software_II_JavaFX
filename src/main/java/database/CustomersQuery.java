@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class CustomersQuery {
+
+    public static int customerCount;
+
     public static ObservableList getAllCustomers(){
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try {
@@ -30,6 +33,7 @@ public abstract class CustomersQuery {
                 Customer customer = new Customer(customer_id, customer_name, address, postal_code, phone, division_Id);
                 allCustomers.add(customer);
             }
+            customerCount = allCustomers.size() + 1;
             resetAutoInc();
         } catch(SQLException throwables){
             throwables.printStackTrace();

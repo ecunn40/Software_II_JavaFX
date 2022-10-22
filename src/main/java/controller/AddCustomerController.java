@@ -23,7 +23,7 @@ import static controller.CustomerController.selectedCustomer;
 public class AddCustomerController extends Main implements Initializable {
 
     @FXML
-    private int customerId;
+    private TextField customerIdField;
     @FXML
     private TextField nameInput;
     @FXML
@@ -42,12 +42,15 @@ public class AddCustomerController extends Main implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if(!addingCustomer)
             setCustomerData(selectedCustomer);
+        else
+            customerIdField.setText(CustomersQuery.customerCount + "");
 
         countryComboBox.setPromptText("Choose a Country");
         countryComboBox.setItems(Countries.getAllCountries());
     }
 
     private void setCustomerData(Customer customer){
+        customerIdField.setText(customer.getCustomer_id() + "");
         nameInput.setText(customer.getCustomer_name());
         addressInput.setText(customer.getAddress());
         postalCodeInput.setText(customer.getPostal_code());
