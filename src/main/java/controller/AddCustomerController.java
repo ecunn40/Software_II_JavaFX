@@ -3,10 +3,8 @@ package controller;
 import abstractions.Customer;
 import countries.Countries;
 import database.CustomersQuery;
+import database.DivisionQuery;
 import exceptions.Exceptions;
-import firstleveldivisions.Provinces;
-import firstleveldivisions.Regions;
-import firstleveldivisions.States;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,8 +37,6 @@ public class AddCustomerController extends Main implements Initializable {
     private ComboBox<String> countryComboBox;
     @FXML
     private ComboBox<String> stateComboBox;
-    private String selectedCountry = null;
-    private String selectedState = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -56,20 +52,21 @@ public class AddCustomerController extends Main implements Initializable {
         addressInput.setText(customer.getAddress());
         postalCodeInput.setText(customer.getPostal_code());
         phoneInput.setText(customer.getPhone());
+        countryComboBox.setValue(DivisionQuery.getCountry(customer.getDivision_id()));
+        stateComboBox.setValue(DivisionQuery.getState(customer.getDivision_id()));
     }
 
     @FXML
     public void onCountrySelected(ActionEvent event){
-        selectedCountry = countryComboBox.getValue();
-        switch (selectedCountry){
+        switch (countryComboBox.getValue()){
             case "United States":
-                stateComboBox.setItems(States.getAllStates());
+                stateComboBox.setItems(DivisionQuery.getAllStates());
                 break;
             case "Canada":
-                stateComboBox.setItems(Provinces.getAllProvinces());
+                stateComboBox.setItems(DivisionQuery.getAllProvinces());
                 break;
             case "United Kingdom":
-                stateComboBox.setItems(Regions.getallRegions());
+                stateComboBox.setItems(DivisionQuery.getAllRegions());
                 break;
             default:
                 break;
@@ -94,7 +91,8 @@ public class AddCustomerController extends Main implements Initializable {
             address = Exceptions.validateString(addressInput);
             postal_code = Exceptions.validateString(postalCodeInput);
             phone = Exceptions.validateString(phoneInput);
-            division_id = Exceptions.validateState(stateComboBox.getValue());
+            Exceptions.validateCountry(countryComboBox.getValue());
+            division_id = Exceptions.getDivisionId(stateComboBox.getValue());
             System.out.println("Selected State: "+ stateComboBox.getValue());
             System.out.println("Division ID: "+ division_id);
 

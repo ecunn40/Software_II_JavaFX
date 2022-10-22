@@ -1,7 +1,9 @@
 package exceptions;
 
 import database.CustomersQuery;
+import database.DivisionQuery;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import main.Main;
 
@@ -105,9 +107,17 @@ public abstract class Exceptions extends Main {
         }
     }
 
-    public static int validateState(String selectedState) throws Exception{
+    public static void validateCountry(String selectedCountry) throws Exception{
+        if(selectedCountry == null)
+        {
+            makeAlert(Alert.AlertType.ERROR, "No Country Selected", "Please Choose a Country");
+            throw new Exception("Error");
+        }
+    }
+
+    public static int getDivisionId(String selectedState) throws Exception{
         try{
-            return CustomersQuery.createDivisionId(selectedState);
+            return DivisionQuery.getDivisionId(selectedState);
         }catch (SQLException sqlException){
             makeAlert(Alert.AlertType.ERROR, "No State Selected", "Please Choose A State");
             throw new Exception("Error");

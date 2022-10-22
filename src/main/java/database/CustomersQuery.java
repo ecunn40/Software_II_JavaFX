@@ -30,6 +30,7 @@ public abstract class CustomersQuery {
                 Customer customer = new Customer(customer_id, customer_name, address, postal_code, phone, division_Id);
                 allCustomers.add(customer);
             }
+            resetAutoInc();
         } catch(SQLException throwables){
             throwables.printStackTrace();
         }
@@ -49,7 +50,6 @@ public abstract class CustomersQuery {
             ps.setInt(5, division_id);
 
             ps.execute();
-            //System.out.println(rowsAffected);
 
         } catch(SQLException throwables){
             throwables.printStackTrace();
@@ -84,6 +84,7 @@ public abstract class CustomersQuery {
             psPost.execute();
             psPhone.execute();
             psDiv.execute();
+            resetAutoInc();
 
         } catch(SQLException throwables){
             throwables.printStackTrace();
@@ -95,18 +96,13 @@ public abstract class CustomersQuery {
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ps.setInt(1, customer_id);
         ps.execute();
+        resetAutoInc();
     }
 
-    public static int createDivisionId(String state) throws SQLException{
-        int division_id;
-        String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = ?";
+    public static void resetAutoInc() throws SQLException {
+        String sql = "ALTER TABLE customers AUTO_INCREMENT = 1";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-        ps.setString(1, state);
 
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        division_id = rs.getInt(1);
-
-        return division_id;
+        ps.execute();
     }
 }
