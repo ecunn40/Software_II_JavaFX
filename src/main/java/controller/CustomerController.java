@@ -67,7 +67,6 @@ public class CustomerController extends Main implements Initializable {
         addingCustomer = false;
         try{
             selectedCustomer = (Customer) customersTable.getSelectionModel().getSelectedItem();
-            addingCustomer = false;
             loadFile(event, ADD_CUSTOMER_FORM);
         } catch (Exception e){
             makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
@@ -75,19 +74,25 @@ public class CustomerController extends Main implements Initializable {
     }
     @FXML
     public void onDeleteButtonClicked() throws SQLException {
-        try{
             selectedCustomer = (Customer) customersTable.getSelectionModel().getSelectedItem();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
-            if(alert.showAndWait().get() == ButtonType.OK){
-                CustomersQuery.deleteCustomer(selectedCustomer.getCustomer_id());
+            if(selectedCustomer != null){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
+                if(alert.showAndWait().get() == ButtonType.OK){
+                    CustomersQuery.deleteCustomer(selectedCustomer.getCustomer_id());
+                }
+            } else{
+                makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
             }
-        } catch (Exception e){
-            makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
-        }
         customersTable.setItems(CustomersQuery.getAllCustomers());
     }
     @FXML
     public void onAppointmentsButtonClicked(ActionEvent event) throws IOException {
-        loadFile(event, APPOINTMENT_FORM);
+        selectedCustomer = (Customer) customersTable.getSelectionModel().getSelectedItem();
+        if(selectedCustomer != null){
+            addingCustomer = false;
+            loadFile(event, APPOINTMENT_FORM);
+        } else{
+            makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
+        }
     }
 }
