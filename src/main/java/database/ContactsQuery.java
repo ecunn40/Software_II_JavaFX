@@ -31,4 +31,40 @@ public abstract class ContactsQuery {
         }
         return allContacts;
     }
+    public static ObservableList getAllContactNames(){
+        ObservableList<String> allNames = FXCollections.observableArrayList();
+        try{
+            String sql = "SELECT Contact_Name FROM contacts";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String contactName = rs.getString(1);
+
+                allNames.add(contactName);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return allNames;
+    }
+
+    public static String getContactName(int contactId){
+        String name= "" ;
+        try{
+            String sql = "SELECT Contact_Name FROM contacts WHERE Contact_ID = ?";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ps.setInt(1, contactId);
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            name = rs.getString(1);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return name;
+    }
 }

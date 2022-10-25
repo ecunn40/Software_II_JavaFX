@@ -30,4 +30,40 @@ public class Appointment {
     public int getAppointmentId() {
         return appointmentId;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Date getAppointmentStart() {
+        return appointmentStart;
+    }
+
+    public Date getAppointmentEnd() {
+        return appointmentEnd;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public int getContactId() {
+        return contactId;
+    }
 }

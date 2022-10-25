@@ -99,6 +99,7 @@ public abstract class CustomersQuery {
         String sql = "DELETE FROM CUSTOMERS WHERE Customer_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ps.setInt(1, customer_id);
+        AppointmentsQuery.deleteCustomerAppointments(customer_id);
         ps.execute();
         resetAutoInc();
     }

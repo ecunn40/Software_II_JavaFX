@@ -1,6 +1,8 @@
 package database;
 
 import abstractions.Appointment;
+import abstractions.Contact;
+import controller.CustomerController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,9 +14,11 @@ public abstract class AppointmentsQuery {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
         try{
-            String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
+            String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Customer_ID = ?";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ps.setInt(1, CustomerController.selectedCustomer.getCustomer_id());
 
             ResultSet rs = ps.executeQuery();
 
@@ -121,10 +125,38 @@ public abstract class AppointmentsQuery {
         }
     }
 
+    public static int getUserId(int appointmentId) {
+        int userId = 0;
+        try{
+            String sql = "SELECT User_ID FROM APPOINTMENTS Where Appointment_ID = ?";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ps.setInt(1, appointmentId);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+
+            userId = rs.getInt(1);
+        } catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return userId;
+    }
+
     public static void deleteAppointment(int appointmentId) throws SQLException {
         String sql = "DELETE FROM APPOINTMENTS WHERE Appointment_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
         ps.setInt(1, appointmentId);
+
+        ps.execute();
+        resetAutoInc();
+    }
+
+    public static void deleteCustomerAppointments(int customerId) throws SQLException {
+        String sql = "DELETE FROM APPOINTMENTS WHERE Customer_ID = ?";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+        ps.setInt(1, customerId);
         ps.execute();
         resetAutoInc();
     }
