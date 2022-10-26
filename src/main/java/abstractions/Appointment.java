@@ -1,6 +1,7 @@
 package abstractions;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private int appointmentId;
@@ -8,13 +9,13 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    private Date appointmentStart;
-    private Date appointmentEnd;
+    private LocalDateTime appointmentStart;
+    private LocalDateTime appointmentEnd;
     private int customerId;
     private int userId;
     private int contactId;
 
-    public Appointment(int appointmentId, String title, String description, String location, String type, Date appointmentStart, Date appointmentEnd, int customerId, int userId, int contactId) {
+    public Appointment(int appointmentId, String title, String description, String location, String type, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerId, int userId, int contactId) {
         this.appointmentId = appointmentId;
         this.title = title;
         this.description = description;
@@ -47,11 +48,11 @@ public class Appointment {
         return type;
     }
 
-    public Date getAppointmentStart() {
+    public LocalDateTime getAppointmentStart() {
         return appointmentStart;
     }
 
-    public Date getAppointmentEnd() {
+    public LocalDateTime getAppointmentEnd() {
         return appointmentEnd;
     }
 

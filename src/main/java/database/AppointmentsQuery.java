@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public abstract class AppointmentsQuery {
 
@@ -28,8 +29,8 @@ public abstract class AppointmentsQuery {
                 String description = rs.getString(3);
                 String location = rs.getString(4);
                 String type = rs.getString(5);
-                Date appointmentStart = rs.getDate(6);
-                Date appointmentEnd = rs.getDate(7);
+                LocalDateTime appointmentStart = rs.getTimestamp(6).toLocalDateTime();
+                LocalDateTime appointmentEnd = rs.getTimestamp(7).toLocalDateTime();
                 int customerId = rs.getInt(8);
                 int userId = rs.getInt(9);
                 int contactId = rs.getInt(10);

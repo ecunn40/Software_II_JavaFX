@@ -12,7 +12,7 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <VBox layoutX="53.0" layoutY="151.0" prefHeight="200.0" prefWidth="71.0" spacing="17.0">
+      <VBox layoutX="53.0" layoutY="151.0" prefHeight="200.0" prefWidth="71.0" spacing="17.0" alignment="BASELINE_RIGHT">
          <children>
             <Text layoutX="10.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer ID">
                <font>
