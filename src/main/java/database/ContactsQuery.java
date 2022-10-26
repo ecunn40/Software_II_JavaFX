@@ -67,4 +67,22 @@ public abstract class ContactsQuery {
         }
         return name;
     }
+
+    public static int getContactId(String contactName){
+        int contactId = 0;
+        try{
+            String sql = "SELECT Contact_ID FROM contacts WHERE Contact_Name = ?";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ps.setString(1, contactName);
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            contactId = rs.getInt(1);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return contactId;
+    }
 }

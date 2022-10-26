@@ -87,12 +87,6 @@ public class CustomerController extends Main implements Initializable {
     }
     @FXML
     public void onAppointmentsButtonClicked(ActionEvent event) throws IOException {
-        selectedCustomer = (Customer) customersTable.getSelectionModel().getSelectedItem();
-        if(selectedCustomer != null){
-            addingCustomer = false;
-            loadFile(event, APPOINTMENT_FORM);
-        } else{
-            makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
-        }
+        loadFile(event, APPOINTMENT_FORM);
     }
 }

@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public abstract class AppointmentsQuery {
 
@@ -15,11 +16,9 @@ public abstract class AppointmentsQuery {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
         try{
-            String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Customer_ID = ?";
+            String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-
-            ps.setInt(1, CustomerController.selectedCustomer.getCustomer_id());
 
             ResultSet rs = ps.executeQuery();
 
@@ -45,9 +44,9 @@ public abstract class AppointmentsQuery {
         return allAppointments;
     }
 
-    public static void insertAppointment(String title, String description, String location, String type, Date appointmentStart, Date appointmentEnd, int customerId, int userId, int contactId){
+    public static void insertAppointment(String title, String description, String location, String type, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerId, int userId, int contactId){
         try {
-            String sql = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?)";
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -55,20 +54,21 @@ public abstract class AppointmentsQuery {
             ps.setString(2, description);
             ps.setString(3, location);
             ps.setString(4, type);
-            ps.setDate(5, appointmentStart);
-            ps.setDate(6, appointmentEnd);
+            ps.setTimestamp(5, Timestamp.valueOf(appointmentStart));
+            ps.setTimestamp(6, Timestamp.valueOf(appointmentEnd));
             ps.setInt(7, customerId);
             ps.setInt(8, userId);
             ps.setInt(9, contactId);
 
             ps.execute();
+            resetAutoInc();
 
         } catch(SQLException throwables){
             throwables.printStackTrace();
         }
     }
 
-    public static void updateAppointment(int appointmentId, String title, String description, String location, String type, Date appointmentStart, Date appointmentEnd, int customerId, int userId, int contactId){
+    public static void updateAppointment(int appointmentId, String title, String description, String location, String type, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerId, int userId, int contactId){
         try {
             String sqlTitle = "UPDATE APPOINTMENTS SET Title = ? WHERE Appointment_ID = ?";
             String sqlDesc = "UPDATE APPOINTMENTS SET Description = ? WHERE Appointment_ID = ?";
@@ -94,8 +94,8 @@ public abstract class AppointmentsQuery {
             psDesc.setString(1, description);
             psLoc.setString(1, location);
             psType.setString(1, type);
-            psStart.setDate(1, appointmentStart);
-            psEnd.setDate(1, appointmentEnd);
+            psStart.setTimestamp(1, Timestamp.valueOf(appointmentStart));
+            psEnd.setTimestamp(1, Timestamp.valueOf(appointmentEnd));
             psCustId.setInt(1, customerId);
             psUserId.setInt(1, userId);
             psContId.setInt(1, contactId);

@@ -20,6 +20,8 @@ public class LogInController extends Main implements Initializable {
 
     ResourceBundle rb = ResourceBundle.getBundle("lang");
 
+    public static String userName;
+
     @FXML
     private Text title;
     @FXML
@@ -55,6 +57,7 @@ public class LogInController extends Main implements Initializable {
     protected void LogIn(ActionEvent actionEvent) throws IOException {
         JDBC.openConnection();
         loadFile(actionEvent, "Customers.fxml");
+        userName = "test";
 //        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
 //            JDBC.openConnection();
 //            loadFile(actionEvent, "Customers.fxml");

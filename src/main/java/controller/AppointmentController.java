@@ -88,7 +88,7 @@ public class AppointmentController extends Main implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this Appointment?");
             if(alert.showAndWait().get() == ButtonType.OK){
                 AppointmentsQuery.deleteAppointment(selectedAppointment.getAppointmentId());
-                makeAlert(Alert.AlertType.INFORMATION, "Appointment Deleted" , "Appointment with Appointment Id " + selectedAppointment.getAppointmentId() + "and Appointment Type " + selectedAppointment.getType() + " has been deleted");
+                makeAlert(Alert.AlertType.INFORMATION, "Appointment Deleted" , "Appointment with Appointment Id " + selectedAppointment.getAppointmentId() + " and Appointment Type " + selectedAppointment.getType() + " has been deleted");
             }
         } else{
             makeAlert(Alert.AlertType.ERROR, "No Appointment Selected", "Please select an Appointment");
