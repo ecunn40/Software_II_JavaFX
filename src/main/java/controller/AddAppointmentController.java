@@ -137,10 +137,10 @@ public class AddAppointmentController extends Main implements Initializable {
         locationInput.setText(appointment.getLocation());
         contactComboBox.setValue(ContactsQuery.getContactName(appointment.getContactId()));
         typeInput.setText(appointment.getType());
-        startInput.setValue(appointment.getAppointmentStart().toLocalDate());
-        startTime.setValue(appointment.getAppointmentStart().toLocalTime());
-        endInput.setValue(appointment.getAppointmentEnd().toLocalDate());
-        endTime.setValue(appointment.getAppointmentEnd().toLocalTime());
+        startInput.setValue(LocalDateTime.parse(appointment.getAppointmentStart(), Appointment.dtf).toLocalDate());
+        startTime.setValue(LocalDateTime.parse(appointment.getAppointmentStart(), Appointment.dtf).toLocalTime());
+        endInput.setValue(LocalDateTime.parse(appointment.getAppointmentEnd(), Appointment.dtf).toLocalDate());
+        endTime.setValue(LocalDateTime.parse(appointment.getAppointmentEnd(), Appointment.dtf).toLocalTime());
         customerIdInput.setValue(appointment.getCustomerId());
         userIdInput.setValue(AppointmentsQuery.getUserId(appointment.getUserId()));
     }
@@ -178,7 +178,7 @@ public class AddAppointmentController extends Main implements Initializable {
                 AppointmentsQuery.updateAppointment(selectedAppointment.getAppointmentId(), title, description, location, type, appointmentStart, appointmentEnd, customerId, userId, contactId);
 
         } catch (Exception e){
-            return;
+            e.printStackTrace();
         }
         loadFile(event, APPOINTMENT_FORM);
         System.out.println("Saved");

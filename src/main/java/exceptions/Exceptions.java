@@ -140,16 +140,15 @@ public abstract class Exceptions extends Main {
         }
         else
             findConflict(allAppointments, proposedAppointmentStart, proposedAppointmentEnd);
-
     }
 
     private static void findConflict(ObservableList<Appointment> existingAppointments, LocalDateTime propApptSt, LocalDateTime propApptEnd) throws RuntimeException {
 
         existingAppointments.forEach(existingAppointment -> {
-            if(propApptSt.isAfter(existingAppointment.getAppointmentEnd()) || propApptEnd.isBefore(existingAppointment.getAppointmentStart())){
+            if(propApptSt.isAfter(LocalDateTime.parse(existingAppointment.getAppointmentEnd(), Appointment.dtf)) || propApptEnd.isBefore(LocalDateTime.parse(existingAppointment.getAppointmentStart(), Appointment.dtf))){
                 return;
             }
-            makeAlert(Alert.AlertType.ERROR, "Appointment Conflict", "Proposed Appt: " + propApptSt + " to " + propApptEnd + " conflicts with existing Appt: " + existingAppointment.getAppointmentStart() + " to " + existingAppointment.getAppointmentEnd());
+            makeAlert(Alert.AlertType.ERROR, "Appointment Conflict", "Proposed Appt: " + propApptSt + " to " + propApptEnd + " conflicts with existing Appt: " + LocalDateTime.parse(existingAppointment.getAppointmentStart(), Appointment.dtf) + " to " + LocalDateTime.parse(existingAppointment.getAppointmentEnd(), Appointment.dtf));
             throw new RuntimeException("Error");
         });
     }

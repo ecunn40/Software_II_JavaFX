@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Appointment {
+
+    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+
     private int appointmentId;
     private String title;
     private String description;
@@ -49,12 +52,12 @@ public class Appointment {
         return type;
     }
 
-    public LocalDateTime getAppointmentStart() {
-        return appointmentStart;
+    public String getAppointmentStart() {
+        return dtf.format(appointmentStart);
     }
 
-    public LocalDateTime getAppointmentEnd() {
-        return appointmentEnd;
+    public String getAppointmentEnd() {
+        return dtf.format(appointmentEnd);
     }
 
     public int getCustomerId() {

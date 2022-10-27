@@ -5,10 +5,7 @@ import database.AppointmentsQuery;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import main.Main;
 
@@ -60,6 +57,12 @@ public class AppointmentController extends Main implements Initializable {
         customerId_column.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         userId_column.setCellValueFactory(new PropertyValueFactory<>("userId"));
         contactId_column.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+    }
+
+    @FXML
+    private void sortBy(ActionEvent event) throws SQLException {
+        RadioButton button = (RadioButton) event.getSource();
+        appointmentsTable.setItems(AppointmentsQuery.getAllDateTimes(button));
     }
 
     @FXML

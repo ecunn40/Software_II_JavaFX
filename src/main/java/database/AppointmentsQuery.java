@@ -5,6 +5,7 @@ import abstractions.Contact;
 import controller.CustomerController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.RadioButton;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -168,5 +169,39 @@ public abstract class AppointmentsQuery {
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.execute();
+    }
+    public static ObservableList getAllDateTimes(RadioButton button) throws SQLException {
+        ObservableList sortedBy = FXCollections.observableArrayList();
+        try {
+            String sql;
+            if(button.getId() == "monthButton")
+                sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments ORDER BY Month(Start)";
+            else
+                sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments ORDER BY Week(Start)";
+
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int appointmentId = rs.getInt(1);
+                String title = rs.getString(2);
+                String description = rs.getString(3);
+                String location = rs.getString(4);
+                String type = rs.getString(5);
+                LocalDateTime appointmentStart = rs.getTimestamp(6).toLocalDateTime();
+                LocalDateTime appointmentEnd = rs.getTimestamp(7).toLocalDateTime();
+                int customerId = rs.getInt(8);
+                int userId = rs.getInt(9);
+                int contactId = rs.getInt(10);
+
+                Appointment appointment = new Appointment(appointmentId, title, description, location, type, appointmentStart, appointmentEnd, customerId, userId, contactId);
+                sortedBy.add(appointment);
+            }
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return sortedBy;
     }
 }
