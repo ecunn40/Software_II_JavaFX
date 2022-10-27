@@ -20,6 +20,7 @@ import main.Main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
@@ -46,13 +47,13 @@ public class AddAppointmentController extends Main implements Initializable {
     @FXML
     private DatePicker startInput;
     @FXML
-    private ComboBox startTime;
+    private ComboBox<LocalTime> startTime;
     @FXML
     private DatePicker endInput;
     @FXML
-    private ComboBox endTime;
+    private ComboBox<LocalTime> endTime;
     @FXML
-    private TextField customerIdInput;
+    private ComboBox customerIdInput;
     @FXML
     private ComboBox userIdInput;
 
@@ -68,6 +69,7 @@ public class AddAppointmentController extends Main implements Initializable {
         contactComboBox.setPromptText("Choose a contact");
         contactComboBox.setItems(ContactsQuery.getAllContactNames());
         userIdInput.setItems(UsersQuery.getAllUsers());
+        customerIdInput.setItems(CustomersQuery.getCustomerIds());
 
         setTime();
     }
@@ -77,9 +79,42 @@ public class AddAppointmentController extends Main implements Initializable {
         LocalTime end = LocalTime.of(22, 0);
 
         while(start.isBefore(end.plusSeconds(1))){
-            startTime.getItems().add(start);
-            endTime.getItems().add(start);
+            if(start != LocalTime.of(22,0)){
+                startTime.getItems().add(start);
+            }
+            if(start != LocalTime.of(8, 0))
+            {
+                endTime.getItems().add(start);
+            }
             start = start.plusHours(1);
+        }
+    }
+    @FXML
+    private void onTimeChosen(ActionEvent event){
+        ComboBox timePicker = (ComboBox) event.getTarget();
+        switch (timePicker.getId()){
+            case "startTime": setEndTime((LocalTime) timePicker.getValue());
+            break;
+            case "endTime": setStartTime((LocalTime) timePicker.getValue());
+            break;
+            default:
+        }
+    }
+
+    private void setStartTime(LocalTime endTime) {
+        startTime.setValue(endTime.minusHours(1));
+    }
+
+    private void setEndTime(LocalTime startTime) {
+        endTime.setValue(startTime.plusHours(1));
+    }
+
+    @FXML
+    private void onDateChosen(ActionEvent event){
+        DatePicker datePicker = (DatePicker) event.getSource();
+        switch (datePicker.getId()){
+            case "startInput": endInput.setValue(startInput.getValue());
+            case "endInput": startInput.setValue(endInput.getValue());
         }
     }
 
@@ -95,7 +130,7 @@ public class AddAppointmentController extends Main implements Initializable {
         startTime.setValue(appointment.getAppointmentStart().toLocalTime());
         endInput.setValue(appointment.getAppointmentEnd().toLocalDate());
         endTime.setValue(appointment.getAppointmentEnd().toLocalTime());
-        customerIdInput.setText(appointment.getCustomerId() + "");
+        customerIdInput.setValue(appointment.getCustomerId());
         userIdInput.setValue(AppointmentsQuery.getUserId(appointment.getUserId()));
     }
 
@@ -122,7 +157,7 @@ public class AddAppointmentController extends Main implements Initializable {
             appointmentStart = LocalDateTime.of(startInput.getValue(), (LocalTime) startTime.getValue());
             appointmentEnd = LocalDateTime.of(endInput.getValue(), (LocalTime) endTime.getValue());
             Exceptions.validateAppointments(appointmentStart, appointmentEnd, Exceptions.validateAndParseId(appointmentIdInput));
-            customerId = selectedCustomer.getCustomer_id();
+            customerId = (int) customerIdInput.getSelectionModel().getSelectedItem();
             userId = (int) userIdInput.getSelectionModel().getSelectedItem();
             contactId = ContactsQuery.getContactId(contactComboBox.getValue());
 

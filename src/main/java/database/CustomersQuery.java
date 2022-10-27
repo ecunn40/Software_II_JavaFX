@@ -104,6 +104,23 @@ public abstract class CustomersQuery {
         resetAutoInc();
     }
 
+    public static ObservableList getCustomerIds() {
+        ObservableList allCustomerIds = FXCollections.observableArrayList();
+
+        try{
+            String sql = "SELECT Customer_ID FROM customers";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                allCustomerIds.add(rs.getInt(1));
+            }
+        } catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return allCustomerIds;
+    }
+
     public static void resetAutoInc() throws SQLException {
         String sql = "ALTER TABLE customers AUTO_INCREMENT = 1";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);

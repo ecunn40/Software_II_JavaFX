@@ -95,6 +95,7 @@ public abstract class AppointmentsQuery {
             psLoc.setString(1, location);
             psType.setString(1, type);
             psStart.setTimestamp(1, Timestamp.valueOf(appointmentStart));
+            System.out.println(appointmentStart + " : " + Timestamp.valueOf(appointmentStart));
             psEnd.setTimestamp(1, Timestamp.valueOf(appointmentEnd));
             psCustId.setInt(1, customerId);
             psUserId.setInt(1, userId);
@@ -114,6 +115,7 @@ public abstract class AppointmentsQuery {
             psDesc.execute();
             psLoc.execute();
             psType.execute();
+            psStart.execute();
             psEnd.execute();
             psCustId.execute();
             psUserId.execute();

@@ -136,19 +136,21 @@ public abstract class Exceptions extends Main {
             throw new Exception("Error");
         }
         if(!AppointmentController.addingAppointment) {
-            System.out.println(proposedAppointmentStart.isAfter(allAppointments.get(1).getAppointmentEnd()));
-            //findConflict(allAppointments.filtered(appointment -> appointment.getAppointmentId() != appointmentId), proposedAppointmentStart, proposedAppointmentEnd);
-        } else{
-            findConflict(allAppointments, proposedAppointmentStart, proposedAppointmentEnd);
+            findConflict(allAppointments.filtered(appointment -> appointment.getAppointmentId() != appointmentId), proposedAppointmentStart, proposedAppointmentEnd);
         }
+        else
+            findConflict(allAppointments, proposedAppointmentStart, proposedAppointmentEnd);
+
     }
 
-    private static void findConflict(ObservableList<Appointment> existingAppointments, LocalDateTime propApptSt, LocalDateTime propApptEnd){
+    private static void findConflict(ObservableList<Appointment> existingAppointments, LocalDateTime propApptSt, LocalDateTime propApptEnd) throws RuntimeException {
+
         existingAppointments.forEach(existingAppointment -> {
-            if(propApptSt.isAfter(existingAppointment.getAppointmentEnd()) || propApptEnd.isEqual(existingAppointment.getAppointmentEnd())){
+            if(propApptSt.isAfter(existingAppointment.getAppointmentEnd()) || propApptEnd.isBefore(existingAppointment.getAppointmentStart())){
                 return;
             }
             makeAlert(Alert.AlertType.ERROR, "Appointment Conflict", "Proposed Appt: " + propApptSt + " to " + propApptEnd + " conflicts with existing Appt: " + existingAppointment.getAppointmentStart() + " to " + existingAppointment.getAppointmentEnd());
+            throw new RuntimeException("Error");
         });
     }
 }

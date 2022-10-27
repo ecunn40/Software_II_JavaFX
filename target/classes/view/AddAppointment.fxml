@@ -92,11 +92,11 @@
             <TextField fx:id="locationInput" />
             <ComboBox fx:id="contactComboBox" prefWidth="150.0" />
             <TextField fx:id="typeInput" layoutX="10.0" layoutY="150.0" />
-            <DatePicker fx:id="startInput" layoutX="10.0" layoutY="185.0" />
-            <ComboBox fx:id="startTime" layoutX="10.0" layoutY="185.0" />
-            <DatePicker fx:id="endInput" layoutX="10.0" layoutY="220.0" />
-            <ComboBox fx:id="endTime" layoutX="10.0" layoutY="220.0" />
-            <TextField fx:id="customerIdInput" layoutX="10.0" layoutY="255.0" />
+            <DatePicker fx:id="startInput" onAction="#onDateChosen" layoutX="10.0" layoutY="185.0" />
+            <ComboBox fx:id="startTime" onAction="#onTimeChosen" layoutX="10.0" layoutY="185.0" />
+            <DatePicker fx:id="endInput" onAction="#onDateChosen" layoutX="10.0" layoutY="220.0" />
+            <ComboBox fx:id="endTime" onAction="#onTimeChosen" layoutX="10.0" layoutY="220.0" />
+            <ComboBox fx:id="customerIdInput" layoutX="10.0" layoutY="255.0" />
             <ComboBox fx:id="userIdInput" layoutX="10.0" layoutY="290.0" prefHeight="6.0" prefWidth="149.0" />
          </children>
       </VBox>
