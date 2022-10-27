@@ -12,9 +12,10 @@ import main.Main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class LogInController extends Main implements Initializable {
 
@@ -50,7 +51,25 @@ public class LogInController extends Main implements Initializable {
             location.setText(rb.getString("location" + ": " + ZoneId.systemDefault()));
             loginButton.setText(rb.getString("Login"));
         }
+        //ZoneId.getAvailableZoneIds().stream().forEach(zone -> System.out.println(zone));
         location.setText("location: " + ZoneId.systemDefault());
+        //System.out.println(ZonedDateTime.now());
+        LocalDate parisDate = LocalDate.of(2019, 10, 26);
+        LocalTime parisTime = LocalTime.of(1, 00);
+        ZoneId parisZoneId = ZoneId.of("Europe/Paris");
+
+        ZonedDateTime parisZDT = ZonedDateTime.of(parisDate, parisTime, parisZoneId);
+
+        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+        Instant parisToGMTInstant = parisZDT.toInstant();
+        ZonedDateTime parisToLocalZDT = parisZDT.withZoneSameInstant(localZoneId);
+        ZonedDateTime gmtToLocalZDT = parisToGMTInstant.atZone(localZoneId);
+
+        //System.out.println("Local: " + ZonedDateTime.now());
+//        System.out.println("Paris: " + parisZDT);
+//        System.out.println("Paris->GMT: " + parisToGMTInstant);
+//        System.out.println("GMT->Local: " + gmtToLocalZDT);
+//        System.out.println("Paris->Local " + parisToLocalZDT);
     }
 
     @FXML

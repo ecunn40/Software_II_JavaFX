@@ -20,9 +20,7 @@ import main.Main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ResourceBundle;
 
 import static controller.AppointmentController.addingAppointment;
@@ -75,18 +73,31 @@ public class AddAppointmentController extends Main implements Initializable {
     }
 
     private void setTime() {
-        LocalTime start = LocalTime.of(8, 0);
-        LocalTime end = LocalTime.of(22, 0);
+        ZoneId easternZoneId = ZoneId.of("America/New_York");
+        LocalDate date = ZonedDateTime.now().toLocalDate();
+        LocalTime easternStartTime = LocalTime.of(8, 0);
+        LocalTime easternEndTime = LocalTime.of(22, 0);
 
-        while(start.isBefore(end.plusSeconds(1))){
-            if(start != LocalTime.of(22,0)){
-                startTime.getItems().add(start);
+        ZonedDateTime easternStartZDT = ZonedDateTime.of(date, easternStartTime, easternZoneId);
+        ZonedDateTime easternEndZDT = ZonedDateTime.of(date, easternEndTime, easternZoneId);
+
+        ZoneId localZoneId = ZoneId.of(ZoneId.systemDefault().getId());
+
+        ZonedDateTime localStartZDT = easternStartZDT.withZoneSameInstant(localZoneId);
+        ZonedDateTime localEndZDT = easternEndZDT.withZoneSameInstant(localZoneId);
+
+        LocalTime localStartTime = localStartZDT.toLocalTime();
+        LocalTime localEndTime = localEndZDT.toLocalTime();
+
+        while(localStartTime.isBefore(localEndTime.plusSeconds(1))){
+            if(localStartTime != localEndTime){
+                startTime.getItems().add(localStartTime);
             }
-            if(start != LocalTime.of(8, 0))
+            if(localStartTime != localStartZDT.toLocalTime())
             {
-                endTime.getItems().add(start);
+                endTime.getItems().add(localStartTime);
             }
-            start = start.plusHours(1);
+            localStartTime = localStartTime.plusHours(1);
         }
     }
     @FXML
@@ -154,8 +165,8 @@ public class AddAppointmentController extends Main implements Initializable {
             description = Exceptions.validateString(descriptionInput);
             location = Exceptions.validateString(locationInput);
             type = Exceptions.validateString(typeInput);
-            appointmentStart = LocalDateTime.of(startInput.getValue(), (LocalTime) startTime.getValue());
-            appointmentEnd = LocalDateTime.of(endInput.getValue(), (LocalTime) endTime.getValue());
+            appointmentStart = LocalDateTime.of(startInput.getValue(), startTime.getValue());
+            appointmentEnd = LocalDateTime.of(endInput.getValue(), endTime.getValue());
             Exceptions.validateAppointments(appointmentStart, appointmentEnd, Exceptions.validateAndParseId(appointmentIdInput));
             customerId = (int) customerIdInput.getSelectionModel().getSelectedItem();
             userId = (int) userIdInput.getSelectionModel().getSelectedItem();

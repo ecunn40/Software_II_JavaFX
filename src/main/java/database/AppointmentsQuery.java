@@ -9,12 +9,12 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class AppointmentsQuery {
 
     public static ObservableList getAllAppointments(){
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
-
         try{
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
 
@@ -95,7 +95,6 @@ public abstract class AppointmentsQuery {
             psLoc.setString(1, location);
             psType.setString(1, type);
             psStart.setTimestamp(1, Timestamp.valueOf(appointmentStart));
-            System.out.println(appointmentStart + " : " + Timestamp.valueOf(appointmentStart));
             psEnd.setTimestamp(1, Timestamp.valueOf(appointmentEnd));
             psCustId.setInt(1, customerId);
             psUserId.setInt(1, userId);
