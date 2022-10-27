@@ -121,6 +121,7 @@ public class AddAppointmentController extends Main implements Initializable {
             type = Exceptions.validateString(typeInput);
             appointmentStart = LocalDateTime.of(startInput.getValue(), (LocalTime) startTime.getValue());
             appointmentEnd = LocalDateTime.of(endInput.getValue(), (LocalTime) endTime.getValue());
+            Exceptions.validateAppointments(appointmentStart, appointmentEnd, Exceptions.validateAndParseId(appointmentIdInput));
             customerId = selectedCustomer.getCustomer_id();
             userId = (int) userIdInput.getSelectionModel().getSelectedItem();
             contactId = ContactsQuery.getContactId(contactComboBox.getValue());

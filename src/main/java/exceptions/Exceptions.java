@@ -1,13 +1,18 @@
 package exceptions;
 
+import abstractions.Appointment;
+import controller.AppointmentController;
+import database.AppointmentsQuery;
 import database.CustomersQuery;
 import database.DivisionQuery;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import main.Main;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -122,5 +127,28 @@ public abstract class Exceptions extends Main {
             makeAlert(Alert.AlertType.ERROR, "No State Selected", "Please Choose A State");
             throw new Exception("Error");
         }
+    }
+
+    public static void validateAppointments(LocalDateTime proposedAppointmentStart, LocalDateTime proposedAppointmentEnd, int appointmentId) throws Exception {
+        ObservableList<Appointment> allAppointments = AppointmentsQuery.getAllAppointments();
+        if(proposedAppointmentStart.isAfter(proposedAppointmentEnd)){
+            makeAlert(Alert.AlertType.ERROR, "Appointment Conflict", "Appointment Start cannot be after Appointment End");
+            throw new Exception("Error");
+        }
+        if(!AppointmentController.addingAppointment) {
+            System.out.println(proposedAppointmentStart.isAfter(allAppointments.get(1).getAppointmentEnd()));
+            //findConflict(allAppointments.filtered(appointment -> appointment.getAppointmentId() != appointmentId), proposedAppointmentStart, proposedAppointmentEnd);
+        } else{
+            findConflict(allAppointments, proposedAppointmentStart, proposedAppointmentEnd);
+        }
+    }
+
+    private static void findConflict(ObservableList<Appointment> existingAppointments, LocalDateTime propApptSt, LocalDateTime propApptEnd){
+        existingAppointments.forEach(existingAppointment -> {
+            if(propApptSt.isAfter(existingAppointment.getAppointmentEnd()) || propApptEnd.isEqual(existingAppointment.getAppointmentEnd())){
+                return;
+            }
+            makeAlert(Alert.AlertType.ERROR, "Appointment Conflict", "Proposed Appt: " + propApptSt + " to " + propApptEnd + " conflicts with existing Appt: " + existingAppointment.getAppointmentStart() + " to " + existingAppointment.getAppointmentEnd());
+        });
     }
 }
