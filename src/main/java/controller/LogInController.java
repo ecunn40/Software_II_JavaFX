@@ -87,16 +87,25 @@ public class LogInController extends Main implements Initializable {
         LocalTime nowPlus15Minutes = ZonedDateTime.now().toLocalTime().plusMinutes(15);
         //LocalTime appointmentTime = LocalTime.of(9, 30);
 
-        Optional<Appointment> apptWithinFifteen = userAppointments.stream().filter(appointment -> nowPlus15Minutes.compareTo(appointment.getAppointmentTStart().toLocalTime()) > 0 && nowPlus15Minutes.compareTo(appointment.getAppointmentTStart().toLocalTime().plusMinutes(15)) < 0).findFirst();
+        Optional<Appointment> apptWithinFifteen = userAppointments.stream().filter(
+                appointment -> nowPlus15Minutes.compareTo(
+                        appointment.getAppointmentTStart().toLocalTime()) > 0
+                        && nowPlus15Minutes.compareTo(appointment.getAppointmentTStart().toLocalTime().plusMinutes(15)) < 0
+                        && ZonedDateTime.now().toLocalDate() == appointment.getAppointmentTStart().toLocalDate()
+        ).findFirst();
+
         apptWithinFifteen.ifPresentOrElse(
                 (appointment)
-                        -> {makeAlert(Alert.AlertType.INFORMATION, "Upcoming Appointment! ", "You have an appointment with an ID of " + appointment.getAppointmentId() + " at " + appointment.getAppointmentStart() + "!");},
-                () -> {makeAlert(Alert.AlertType.INFORMATION, "No Upcoming Appointments", "You have no upcoming appointments");});
+                        -> {makeAlert(Alert.AlertType.INFORMATION, "Upcoming Appointment! ",
+                        "You have an appointment with an ID of " + appointment.getAppointmentId()
+                                + " on " + appointment.getAppointmentTStart().toLocalDate() + " at " + appointment.getAppointmentTStart().toLocalTime() + "!");},
+                () -> {makeAlert(Alert.AlertType.INFORMATION, "No Upcoming Appointments", "You have no upcoming appointments");}
+        );
 
         userName = "test";
 //        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
-//            JDBC.openConnection();
-//            loadFile(actionEvent, "Customers.fxml");
+//        JDBC.openConnection();
+        loadFile(actionEvent, "Customers.fxml");
 //        }
 //        else
 //            makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
