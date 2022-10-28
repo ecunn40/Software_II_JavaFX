@@ -1,9 +1,13 @@
 package controller;
 
+import abstractions.Appointment;
 import database.JDBC;
+import database.UsersQuery;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,8 +18,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.*;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
+import java.util.stream.Stream;
 
 public class LogInController extends Main implements Initializable {
 
@@ -75,7 +81,18 @@ public class LogInController extends Main implements Initializable {
     @FXML
     protected void LogIn(ActionEvent actionEvent) throws IOException {
         JDBC.openConnection();
-        loadFile(actionEvent, "Customers.fxml");
+
+        ObservableList<Appointment> userAppointments = UsersQuery.getUserAppointments(UsersQuery.getUserId("test"));
+
+        LocalTime nowPlus15Minutes = ZonedDateTime.now().toLocalTime().plusMinutes(15);
+        //LocalTime appointmentTime = LocalTime.of(9, 30);
+
+        Optional<Appointment> apptWithinFifteen = userAppointments.stream().filter(appointment -> nowPlus15Minutes.compareTo(appointment.getAppointmentTStart().toLocalTime()) > 0 && nowPlus15Minutes.compareTo(appointment.getAppointmentTStart().toLocalTime().plusMinutes(15)) < 0).findFirst();
+        apptWithinFifteen.ifPresentOrElse(
+                (appointment)
+                        -> {makeAlert(Alert.AlertType.INFORMATION, "Upcoming Appointment! ", "You have an appointment with an ID of " + appointment.getAppointmentId() + " at " + appointment.getAppointmentStart() + "!");},
+                () -> {makeAlert(Alert.AlertType.INFORMATION, "No Upcoming Appointments", "You have no upcoming appointments");});
+
         userName = "test";
 //        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
 //            JDBC.openConnection();

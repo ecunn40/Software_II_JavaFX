@@ -56,6 +56,8 @@ public class Appointment {
         return dtf.format(appointmentStart);
     }
 
+    public LocalDateTime getAppointmentTStart() { return appointmentStart; }
+
     public String getAppointmentEnd() {
         return dtf.format(appointmentEnd);
     }
