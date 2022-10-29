@@ -204,4 +204,41 @@ public abstract class AppointmentsQuery {
         }
         return sortedBy;
     }
+
+    public static ObservableList getAllLocations() {
+        ObservableList allLocations = FXCollections.observableArrayList();
+        try{
+            String sql = "SELECT Location FROM appointments";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                allLocations.add(rs.getString(1));
+            }
+        } catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return allLocations;
+    }
+
+    public static int getLocationCount(String locationSelection) {
+        int count = 0;
+        try{
+            String sql = "SELECT COUNT(*) FROM appointments WHERE Location = ?";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ps.setString(1, locationSelection);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            count = rs.getInt(1);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return count;
+    }
 }

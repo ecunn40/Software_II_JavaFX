@@ -25,9 +25,9 @@ import java.util.stream.Stream;
 
 public class LogInController extends Main implements Initializable {
 
-    ResourceBundle rb = ResourceBundle.getBundle("lang");
-
     public static String userName;
+
+    private ResourceBundle resourceBundle;
 
     @FXML
     private Text title;
@@ -47,45 +47,54 @@ public class LogInController extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+
         if(Locale.getDefault().getLanguage().equals("fr")) {
-            title.setText(rb.getString("Login"));
+            title.setText(this.resourceBundle.getString("Login"));
             title.setLayoutX(160.0);
-            usernameLabel.setText(rb.getString("username"));
+            usernameLabel.setText(this.resourceBundle.getString("username"));
             usernameLabel.setLayoutX(100.0);
-            passwordLabel.setText(rb.getString("password"));
+            passwordLabel.setText(this.resourceBundle.getString("password"));
             passwordLabel.setLayoutX(125.0);
-            location.setText(rb.getString("location" + ": " + ZoneId.systemDefault()));
-            loginButton.setText(rb.getString("Login"));
+            location.setText(this.resourceBundle.getString("location") + ": " + ZoneId.systemDefault());
+            loginButton.setText(this.resourceBundle.getString("Login"));
         }
-        //ZoneId.getAvailableZoneIds().stream().forEach(zone -> System.out.println(zone));
-        location.setText("location: " + ZoneId.systemDefault());
-        //System.out.println(ZonedDateTime.now());
-        LocalDate parisDate = LocalDate.of(2019, 10, 26);
-        LocalTime parisTime = LocalTime.of(1, 00);
-        ZoneId parisZoneId = ZoneId.of("Europe/Paris");
-
-        ZonedDateTime parisZDT = ZonedDateTime.of(parisDate, parisTime, parisZoneId);
-
-        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-        Instant parisToGMTInstant = parisZDT.toInstant();
-        ZonedDateTime parisToLocalZDT = parisZDT.withZoneSameInstant(localZoneId);
-        ZonedDateTime gmtToLocalZDT = parisToGMTInstant.atZone(localZoneId);
-
-        //System.out.println("Local: " + ZonedDateTime.now());
-//        System.out.println("Paris: " + parisZDT);
-//        System.out.println("Paris->GMT: " + parisToGMTInstant);
-//        System.out.println("GMT->Local: " + gmtToLocalZDT);
-//        System.out.println("Paris->Local " + parisToLocalZDT);
+        else
+            location.setText("location: " + ZoneId.systemDefault());
     }
 
     @FXML
     protected void LogIn(ActionEvent actionEvent) throws IOException {
         JDBC.openConnection();
+        userName = "test";
+//        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
+        checkForAppointments();
+//        JDBC.openConnection();
+        loadFile(actionEvent, "Customers.fxml");
+//        }
+//        else
+//            makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
+    }
 
+    private void checkForAppointments(){
         ObservableList<Appointment> userAppointments = UsersQuery.getUserAppointments(UsersQuery.getUserId("test"));
 
         LocalTime nowPlus15Minutes = ZonedDateTime.now().toLocalTime().plusMinutes(15);
-        //LocalTime appointmentTime = LocalTime.of(9, 30);
+        String alertTitle = "Upcoming Appointment!";
+        String alertMessage = "You have an appointment with an ID of ";
+        String alertTitleNo = "No Upcoming Appointments!";
+        String alertMessageNo = "You have no upcoming appointments";
+        String on = "on";
+        String at = "at";
+
+        if(Locale.getDefault().getLanguage().equals("fr")){
+            alertTitle = this.resourceBundle.getString("upcomingTitle");
+            alertMessage = this.resourceBundle.getString("upcomingMessage");
+            alertTitleNo = this.resourceBundle.getString("noupcomingTitle");
+            alertMessageNo = this.resourceBundle.getString("noupcomingMessage");
+            on = this.resourceBundle.getString("on");
+            at = this.resourceBundle.getString("on");
+        }
 
         Optional<Appointment> apptWithinFifteen = userAppointments.stream().filter(
                 appointment -> nowPlus15Minutes.compareTo(
@@ -94,20 +103,19 @@ public class LogInController extends Main implements Initializable {
                         && ZonedDateTime.now().toLocalDate() == appointment.getAppointmentTStart().toLocalDate()
         ).findFirst();
 
+        String finalAlertTitle = alertTitle;
+        String finalAlertMessage = alertMessage;
+        String finalAlertTitleNo = alertTitleNo;
+        String finalAlertMessageNo = alertMessageNo;
+        String finalOn = on;
+        String finalAt = at;
         apptWithinFifteen.ifPresentOrElse(
                 (appointment)
-                        -> {makeAlert(Alert.AlertType.INFORMATION, "Upcoming Appointment! ",
-                        "You have an appointment with an ID of " + appointment.getAppointmentId()
-                                + " on " + appointment.getAppointmentTStart().toLocalDate() + " at " + appointment.getAppointmentTStart().toLocalTime() + "!");},
-                () -> {makeAlert(Alert.AlertType.INFORMATION, "No Upcoming Appointments", "You have no upcoming appointments");}
+                        -> {makeAlert(Alert.AlertType.INFORMATION, finalAlertTitle,
+                        finalAlertMessage + appointment.getAppointmentId()
+                                + String.format(" %s ", finalAt) + appointment.getAppointmentTStart().toLocalDate() + String.format(" %s ", finalOn) + appointment.getAppointmentTStart().toLocalTime() + "!");},
+                () -> {makeAlert(Alert.AlertType.INFORMATION, finalAlertTitleNo, finalAlertMessageNo);}
         );
-
-        userName = "test";
-//        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
-//        JDBC.openConnection();
-        loadFile(actionEvent, "Customers.fxml");
-//        }
-//        else
-//            makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
     }
+
 }

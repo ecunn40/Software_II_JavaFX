@@ -2,6 +2,8 @@ package controller;
 
 import abstractions.Appointment;
 import database.AppointmentsQuery;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,7 +15,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class AppointmentController extends Main implements Initializable {
 
@@ -39,13 +43,18 @@ public class AppointmentController extends Main implements Initializable {
     private TableColumn userId_column;
     @FXML
     private TableColumn contactId_column;
+    @FXML
+    private ComboBox locationComboBox;
 
     public static boolean addingAppointment;
     public static Appointment selectedAppointment = null;
+    private ObservableList allLocations = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
+        allLocations = AppointmentsQuery.getAllLocations();
+        locationComboBox.setItems((ObservableList) allLocations.stream().distinct().collect(Collectors.toCollection(FXCollections::observableArrayList)));
 
         appointmentId_column.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         title_column.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -74,6 +83,15 @@ public class AppointmentController extends Main implements Initializable {
         addingAppointment = true;
         loadFile(event, ADD_APPOINTMENT_FORM);
     }
+
+    @FXML
+    public void onLocationButtonClicked(ActionEvent event) {
+        String locationSelection = (String) locationComboBox.getSelectionModel().getSelectedItem();
+        int count = AppointmentsQuery.getLocationCount(locationSelection);
+
+        makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format("There are %d appointments at %s", count, locationSelection));
+    }
+
     @FXML
     public void onUpdateButtonClicked(ActionEvent event) {
         addingAppointment = false;

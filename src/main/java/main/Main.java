@@ -1,7 +1,12 @@
 package main;
 
+import abstractions.Appointment;
+import database.AppointmentsQuery;
 import database.CustomersQuery;
+import database.JDBC;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +19,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 public class Main extends Application {
 
@@ -55,7 +63,6 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
-    public static void main(String[] args) {
-        launch();
+    public static void main(String[] args) { launch();
     }
 }
