@@ -2,6 +2,7 @@ package controller;
 
 import abstractions.Appointment;
 import database.AppointmentsQuery;
+import database.ContactsQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -50,6 +51,8 @@ public class AppointmentController extends Main implements Initializable {
     private ComboBox typeComboBox;
     @FXML
     private ComboBox dateComboBox;
+    @FXML
+    private ComboBox contactComboBox;
 
     public static boolean addingAppointment;
     public static Appointment selectedAppointment = null;
@@ -69,6 +72,7 @@ public class AppointmentController extends Main implements Initializable {
         locationComboBox.setItems(returnDistinct(allLocations));
         typeComboBox.setItems(returnDistinct(allTypes));
         dateComboBox.setItems(returnDistinct(allDates));
+        contactComboBox.setItems(ContactsQuery.getAllContactNames());
 
         appointmentId_column.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         title_column.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -84,6 +88,11 @@ public class AppointmentController extends Main implements Initializable {
 
     private ObservableList returnDistinct(ObservableList list){
         return (ObservableList) list.stream().distinct().collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
+    @FXML
+    private void showAllAppointments(){
+        appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
     }
 
     @FXML
@@ -116,7 +125,7 @@ public class AppointmentController extends Main implements Initializable {
 
         if(selectedMonth != null)
         {
-            int count = AppointmentsQuery.getApptByTypeMonth(selectedType, selectedMonth);
+            int count = AppointmentsQuery.getApptByMonth(selectedType, selectedMonth);
             makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format(" %s - %s - %d", selectedType, selectedMonth, count));
         }
     }
@@ -127,7 +136,7 @@ public class AppointmentController extends Main implements Initializable {
 
         if(selectedType != null)
         {
-            int count = AppointmentsQuery.getApptByTypeMonth(selectedType, selectedMonth);
+            int count = AppointmentsQuery.getApptByMonth(selectedType, selectedMonth);
             makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format(" %s - %s - %d", selectedType, selectedMonth, count));
         }
     }
@@ -155,5 +164,12 @@ public class AppointmentController extends Main implements Initializable {
             makeAlert(Alert.AlertType.ERROR, "No Appointment Selected", "Please select an Appointment");
         }
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
+    }
+
+    public void onContactBoxClicked(ActionEvent event) {
+        String selectedContact = (String) contactComboBox.getSelectionModel().getSelectedItem();
+        ObservableList contactAppts = AppointmentsQuery.getContactAppointments(ContactsQuery.getContactId(selectedContact));
+
+        appointmentsTable.setItems(contactAppts);
     }
 }

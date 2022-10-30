@@ -281,7 +281,7 @@ public abstract class AppointmentsQuery {
         return count;
     }
 
-    public static int getApptByTypeMonth(String type, String month){
+    public static int getApptByMonth(String type, String month){
         int count = 0;
         try{
             String sql = "SELECT COUNT(*) FROM appointments WHERE Type = ? AND Month(Start)= ?";
@@ -299,5 +299,36 @@ public abstract class AppointmentsQuery {
             sqlException.printStackTrace();
         }
         return count;
+    }
+
+    public static ObservableList getContactAppointments(int contactId) {
+        ObservableList allContactAppointments = FXCollections.observableArrayList();
+        try {
+            String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID FROM appointments WHERE Contact_ID = ?";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ps.setInt(1, contactId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int appointmentId = rs.getInt(1);
+                String title = rs.getString(2);
+                String description = rs.getString(3);
+                String location = rs.getString(4);
+                String type = rs.getString(5);
+                LocalDateTime appointmentStart = rs.getTimestamp(6).toLocalDateTime();
+                LocalDateTime appointmentEnd = rs.getTimestamp(7).toLocalDateTime();
+                int customerId = rs.getInt(8);
+                int userId = rs.getInt(9);
+
+                Appointment appointment = new Appointment(appointmentId, title, description, location, type, appointmentStart, appointmentEnd, customerId, userId, contactId);
+                allContactAppointments.add(appointment);
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return allContactAppointments;
     }
 }

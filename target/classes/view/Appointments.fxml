@@ -36,14 +36,16 @@
             <Font size="20.0" />
          </font>
       </Label>
+      <Button onAction="#showAllAppointments" layoutX="500" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Show All Appointments" />
       <Button onAction="#onAddButtonClicked" layoutX="14.0" layoutY="362.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Add" />
-      <ComboBox fx:id="locationComboBox" onAction="#onLocationButtonClicked" promptText="Appointment count by location" layoutX="700.0" layoutY="362.0" prefHeight="25.0" prefWidth="250" />
-      <ComboBox fx:id="typeComboBox" onAction="#onApptTypeClicked" promptText="Choose a type" layoutX="500.0" layoutY="362.0" prefHeight="25.0" prefWidth="150" />
-      <Text text="AND" layoutX="460.0" layoutY="380.0" />
-      <ComboBox fx:id="dateComboBox" onAction="#onApptDateClicked" promptText="Choose a date" layoutX="300.0" layoutY="362.0" prefHeight="25.0" prefWidth="150" />
+      <ComboBox fx:id="locationComboBox" onAction="#onLocationButtonClicked" promptText="Appointment count by location" layoutX="620.0" layoutY="362.0" prefHeight="25.0" prefWidth="250" />
+      <ComboBox fx:id="typeComboBox" onAction="#onApptTypeClicked" promptText="Choose a type" layoutX="450.0" layoutY="362.0" prefHeight="25.0" prefWidth="150" />
+      <Text text="AND" layoutX="410.0" layoutY="380.0" />
+      <ComboBox fx:id="dateComboBox" onAction="#onApptDateClicked" promptText="Choose a date" layoutX="250.0" layoutY="362.0" prefHeight="25.0" prefWidth="150" />
       <Button onAction="#onUpdateButtonClicked" layoutX="77.0" layoutY="362.0" mnemonicParsing="false" text="Update" />
       <Button onAction="#onDeleteButtonClicked" layoutX="145.0" layoutY="362.0" mnemonicParsing="false" text="Delete" />
-      <Button onAction="#onBackButtonPressed" layoutX="980.0" layoutY="362.0" mnemonicParsing="false" text="Go Back" />
+      <ComboBox fx:id="contactComboBox" onAction="#onContactBoxClicked" promptText="View Schedule for..." layoutX="900" layoutY="362.0"  />
+      <Button onAction="#onBackButtonPressed" layoutX="1100.0" layoutY="362.0" mnemonicParsing="false" text="Go Back" />
        <fx:define>
            <ToggleGroup fx:id="toggleGroup"/>
        </fx:define>
