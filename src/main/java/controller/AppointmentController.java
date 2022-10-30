@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -45,16 +46,29 @@ public class AppointmentController extends Main implements Initializable {
     private TableColumn contactId_column;
     @FXML
     private ComboBox locationComboBox;
+    @FXML
+    private ComboBox typeComboBox;
+    @FXML
+    private ComboBox dateComboBox;
 
     public static boolean addingAppointment;
     public static Appointment selectedAppointment = null;
+    private static String selectedType = null;
+    private static String selectedMonth = null;
+
     private ObservableList allLocations = FXCollections.observableArrayList();
+    private ObservableList allTypes = FXCollections.observableArrayList();
+    private ObservableList allDates = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
         allLocations = AppointmentsQuery.getAllLocations();
-        locationComboBox.setItems((ObservableList) allLocations.stream().distinct().collect(Collectors.toCollection(FXCollections::observableArrayList)));
+        allTypes = AppointmentsQuery.getAllTypes();
+        allDates = AppointmentsQuery.getAllDates();
+        locationComboBox.setItems(returnDistinct(allLocations));
+        typeComboBox.setItems(returnDistinct(allTypes));
+        dateComboBox.setItems(returnDistinct(allDates));
 
         appointmentId_column.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         title_column.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -66,6 +80,10 @@ public class AppointmentController extends Main implements Initializable {
         customerId_column.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         userId_column.setCellValueFactory(new PropertyValueFactory<>("userId"));
         contactId_column.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+    }
+
+    private ObservableList returnDistinct(ObservableList list){
+        return (ObservableList) list.stream().distinct().collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
     @FXML
@@ -90,6 +108,28 @@ public class AppointmentController extends Main implements Initializable {
         int count = AppointmentsQuery.getLocationCount(locationSelection);
 
         makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format("There are %d appointments at %s", count, locationSelection));
+    }
+
+    @FXML
+    public void onApptTypeClicked(ActionEvent event) {
+        selectedType = (String) typeComboBox.getSelectionModel().getSelectedItem();
+
+        if(selectedMonth != null)
+        {
+            int count = AppointmentsQuery.getApptByTypeMonth(selectedType, selectedMonth);
+            makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format(" %s - %s - %d", selectedType, selectedMonth, count));
+        }
+    }
+
+    @FXML
+    public void onApptDateClicked(ActionEvent event) {
+        selectedMonth = (String) dateComboBox.getSelectionModel().getSelectedItem();
+
+        if(selectedType != null)
+        {
+            int count = AppointmentsQuery.getApptByTypeMonth(selectedType, selectedMonth);
+            makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format(" %s - %s - %d", selectedType, selectedMonth, count));
+        }
     }
 
     @FXML

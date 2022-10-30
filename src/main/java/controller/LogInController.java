@@ -1,6 +1,8 @@
 package controller;
 
 import abstractions.Appointment;
+import database.AppointmentsQuery;
+import database.CountriesQuery;
 import database.JDBC;
 import database.UsersQuery;
 import javafx.collections.ObservableList;
@@ -66,6 +68,9 @@ public class LogInController extends Main implements Initializable {
     @FXML
     protected void LogIn(ActionEvent actionEvent) throws IOException {
         JDBC.openConnection();
+
+
+
         userName = "test";
 //        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
         checkForAppointments();

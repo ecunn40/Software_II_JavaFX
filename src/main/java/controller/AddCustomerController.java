@@ -1,14 +1,13 @@
 package controller;
 
 import abstractions.Customer;
-import countries.Countries;
+import database.CountriesQuery;
 import database.CustomersQuery;
 import database.DivisionQuery;
 import exceptions.Exceptions;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import main.*;
@@ -46,7 +45,7 @@ public class AddCustomerController extends Main implements Initializable {
             customerIdField.setText(CustomersQuery.customerCount + "");
 
         countryComboBox.setPromptText("Choose a Country");
-        countryComboBox.setItems(Countries.getAllCountries());
+        countryComboBox.setItems(CountriesQuery.getAllCountries());
     }
 
     private void setCustomerData(Customer customer){
@@ -62,13 +61,13 @@ public class AddCustomerController extends Main implements Initializable {
     @FXML
     public void onCountrySelected(ActionEvent event){
         switch (countryComboBox.getValue()){
-            case "United States":
+            case "U.S":
                 stateComboBox.setItems(DivisionQuery.getAllStates());
                 break;
             case "Canada":
                 stateComboBox.setItems(DivisionQuery.getAllProvinces());
                 break;
-            case "United Kingdom":
+            case "UK":
                 stateComboBox.setItems(DivisionQuery.getAllRegions());
                 break;
             default:

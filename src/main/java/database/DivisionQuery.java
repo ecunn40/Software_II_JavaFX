@@ -108,8 +108,8 @@ public abstract class DivisionQuery {
 
             rs.next();
             switch (rs.getInt(1)){
-                case 1: return "United States";
-                case 2: return "United Kingdom";
+                case 1: return "U.S";
+                case 2: return "UK";
                 case 3: return "Canada";
             }
 

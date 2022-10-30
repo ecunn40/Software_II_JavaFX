@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.RadioButton;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -224,6 +225,44 @@ public abstract class AppointmentsQuery {
         return allLocations;
     }
 
+    public static ObservableList getAllTypes() {
+        ObservableList allTypes = FXCollections.observableArrayList();
+        try{
+            String sql = "SELECT Type FROM appointments";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                allTypes.add(rs.getString(1));
+            }
+        } catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return allTypes;
+    }
+
+    public static ObservableList getAllDates() {
+        ObservableList allDates = FXCollections.observableArrayList();
+        try{
+            String sql = "SELECT Month(Start) FROM appointments";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                allDates.add(rs.getString(1));
+            }
+        } catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return allDates;
+    }
+
     public static int getLocationCount(String locationSelection) {
         int count = 0;
         try{
@@ -232,6 +271,26 @@ public abstract class AppointmentsQuery {
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
             ps.setString(1, locationSelection);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            count = rs.getInt(1);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return count;
+    }
+
+    public static int getApptByTypeMonth(String type, String month){
+        int count = 0;
+        try{
+            String sql = "SELECT COUNT(*) FROM appointments WHERE Type = ? AND Month(Start)= ?";
+
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+            ps.setString(1, type);
+            ps.setString(2, month);
+
 
             ResultSet rs = ps.executeQuery();
             rs.next();
