@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import main.Main;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.time.*;
@@ -49,6 +50,7 @@ public class LogInController extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        JDBC.openConnection();
         this.resourceBundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
         if(Locale.getDefault().getLanguage().equals("fr")) {
@@ -67,18 +69,14 @@ public class LogInController extends Main implements Initializable {
 
     @FXML
     protected void LogIn(ActionEvent actionEvent) throws IOException {
-        JDBC.openConnection();
-
-
-
-        userName = "test";
-//        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
-        checkForAppointments();
-//        JDBC.openConnection();
-        loadFile(actionEvent, "Customers.fxml");
-//        }
-//        else
-//            makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
+        if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
+            checkForAppointments();
+            loadFile(actionEvent, "Customers.fxml");
+        }
+        else if(Locale.getDefault().getLanguage().equals("fr"))
+            makeAlert(Alert.AlertType.ERROR, this.resourceBundle.getString("invalidTitle"), this.resourceBundle.getString("invalidMsg"));
+            else
+                makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
     }
 
     private void checkForAppointments(){
