@@ -10,8 +10,14 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/**
+ * Abstract class to hold all database queries on the users table
+ */
 public abstract class UsersQuery {
-
+    /**
+     *
+     * @return all users in users table
+     */
     public static ObservableList getAllUsers() {
         ObservableList allUsers = FXCollections.observableArrayList();
         try{
@@ -29,6 +35,11 @@ public abstract class UsersQuery {
         return allUsers;
     }
 
+    /**
+     *
+     * @param userName
+     * @return user id with given username
+     */
     public static int getUserId(String userName){
         int userId = 0;
         try{
@@ -47,6 +58,10 @@ public abstract class UsersQuery {
         return userId;
     }
 
+    /**
+     * @param userId
+     * @return user appointments with given user id
+     */
     public static ObservableList<Appointment> getUserAppointments(int userId){
         ObservableList userAppointments = FXCollections.observableArrayList();
         try{

@@ -9,8 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Abstract class to hold all queries on the countries table
+ */
 public abstract class CountriesQuery {
-
+    /**
+     * @return all countries in countries table
+     */
     public static ObservableList<String> getAllCountries(){
         ObservableList<String> allCountries = FXCollections.observableArrayList();
         try{

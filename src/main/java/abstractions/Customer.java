@@ -1,5 +1,8 @@
 package abstractions;
 
+/**
+ * Blueprint for a customer
+ */
 public class Customer {
 
     private int customer_id;
@@ -9,6 +12,15 @@ public class Customer {
     private String phone;
     private int division_id;
 
+    /**
+     * Constructor for a customer
+     * @param customer_id
+     * @param customer_name
+     * @param address
+     * @param postal_code
+     * @param phone
+     * @param division_id
+     */
     public Customer(int customer_id, String customer_name, String address, String postal_code, String phone, int division_id) {
         this.customer_id = customer_id;
         this.customer_name = customer_name;
@@ -18,9 +30,7 @@ public class Customer {
         this.division_id = division_id;
     }
 
-    public int getCustomer_id() {
-        return customer_id;
-    }
+    public int getCustomer_id() { return customer_id; }
 
     public String getCustomer_name() {
         return customer_name;

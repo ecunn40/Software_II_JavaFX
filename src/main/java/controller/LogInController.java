@@ -26,9 +26,10 @@ import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
+/**
+ * Controller for the LogIn form
+ */
 public class LogInController extends Main implements Initializable {
-
-    public static String userName;
 
     private ResourceBundle resourceBundle;
 
@@ -46,8 +47,12 @@ public class LogInController extends Main implements Initializable {
     private Label location;
     @FXML
     private Button loginButton;
-    private String userLocation;
 
+    /**
+     * Initializes all fields based on the Locale and opens the database connection.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         JDBC.openConnection();
@@ -67,6 +72,11 @@ public class LogInController extends Main implements Initializable {
             location.setText("location: " + ZoneId.systemDefault());
     }
 
+    /**
+     * Validates log-in
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     protected void LogIn(ActionEvent actionEvent) throws IOException {
         if(JDBC.validateLogin(usernameField.getText(), passwordField.getText())) {
@@ -79,6 +89,9 @@ public class LogInController extends Main implements Initializable {
                 makeAlert(Alert.AlertType.ERROR, "Invalid username or password", "Please enter the valid username and password");
     }
 
+    /**
+     * Checks for appointments within 15 minutes of log-in time, displaying messages based on the Locale.
+     */
     private void checkForAppointments(){
         ObservableList<Appointment> userAppointments = UsersQuery.getUserAppointments(UsersQuery.getUserId("test"));
 

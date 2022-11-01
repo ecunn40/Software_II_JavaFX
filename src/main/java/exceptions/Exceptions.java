@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Abstract class to hold all exceptions
+ */
 public abstract class Exceptions extends Main {
 
     /**
@@ -62,56 +65,12 @@ public abstract class Exceptions extends Main {
             throw new Exception("Error");
         }
     }
-    /**
-     * Validates the address
-     * @param textField text field
-     * @return the validated string
-     * @throws Exception an exception
-     */
-    public static String validateAddress(TextField textField) throws Exception {
-        Pattern pattern = Pattern.compile("[a-zA-Z]+",Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(textField.getText());
-        boolean matchFound = matcher.find();
-        if(matchFound) return textField.getText();
-        else {
-            makeAlert(Alert.AlertType.ERROR, "Invalid Address", "Please enter a valid Address");
-            throw new Exception("Error");
-        }
-    }
 
     /**
-     * Validates the postal code
-     * @param textField text field
-     * @return the validated string
-     * @throws Exception an exception
+     * Validates the selected country
+     * @param selectedCountry
+     * @throws Exception
      */
-    public static String validatePostalCode(TextField textField) throws Exception {
-        Pattern pattern = Pattern.compile("[a-zA-Z]+",Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(textField.getText());
-        boolean matchFound = matcher.find();
-        if(matchFound) return textField.getText();
-        else {
-            makeAlert(Alert.AlertType.ERROR, "Invalid Postal Code", "Please enter a valid Postal Code");
-            throw new Exception("Error");
-        }
-    }
-    /**
-     * Validates the phone number
-     * @param textField text field
-     * @return the validated string
-     * @throws Exception an exception
-     */
-    public static String validatePhoneNumber(TextField textField) throws Exception {
-        Pattern pattern = Pattern.compile("[a-zA-Z]+",Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(textField.getText());
-        boolean matchFound = matcher.find();
-        if(matchFound) return textField.getText();
-        else {
-            makeAlert(Alert.AlertType.ERROR, "Invalid Phone Number", "Please enter a valid Phone Number");
-            throw new Exception("Error");
-        }
-    }
-
     public static void validateCountry(String selectedCountry) throws Exception{
         if(selectedCountry == null)
         {
@@ -120,6 +79,12 @@ public abstract class Exceptions extends Main {
         }
     }
 
+    /**
+     * Validates the selected state
+     * @param selectedState
+     * @return division id
+     * @throws Exception
+     */
     public static int getDivisionId(String selectedState) throws Exception{
         try{
             return DivisionQuery.getDivisionId(selectedState);
@@ -129,6 +94,13 @@ public abstract class Exceptions extends Main {
         }
     }
 
+    /**
+     * Validates appointments for conflicting dates and times
+     * @param proposedAppointmentStart
+     * @param proposedAppointmentEnd
+     * @param appointmentId
+     * @throws Exception
+     */
     public static void validateAppointments(LocalDateTime proposedAppointmentStart, LocalDateTime proposedAppointmentEnd, int appointmentId) throws Exception {
         ObservableList<Appointment> allAppointments = AppointmentsQuery.getAllAppointments();
         if(proposedAppointmentStart.isAfter(proposedAppointmentEnd)){
@@ -142,6 +114,13 @@ public abstract class Exceptions extends Main {
             findConflict(allAppointments, proposedAppointmentStart, proposedAppointmentEnd);
     }
 
+    /**
+     * Validates appointments for conflicts
+     * @param existingAppointments
+     * @param propApptSt
+     * @param propApptEnd
+     * @throws RuntimeException
+     */
     private static void findConflict(ObservableList<Appointment> existingAppointments, LocalDateTime propApptSt, LocalDateTime propApptEnd) throws RuntimeException {
 
         existingAppointments.forEach(existingAppointment -> {

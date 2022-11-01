@@ -26,6 +26,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+/**
+ * Main class to hold general constants and methods to be used throughout the program
+ */
 public class Main extends Application {
 
     public final String LOGIN_FORM = "LogIn.fxml";
@@ -34,6 +37,11 @@ public class Main extends Application {
     public final String APPOINTMENT_FORM = "Appointments.fxml";
     public final String ADD_APPOINTMENT_FORM = "AddAppointment.fxml";
 
+    /**
+     * Loads the initial form
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/Login.fxml"));
@@ -43,12 +51,25 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * Loads the form with the given filename
+     * @param actionEvent
+     * @param filename
+     * @throws IOException
+     */
     public static void loadFile(ActionEvent actionEvent, String filename) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/" + filename));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
     }
+
+    /**
+     * Cancels any changes and loads given form
+     * @param event
+     * @param fileName
+     * @throws IOException
+     */
     @FXML
     public void onCancelButtonClick(ActionEvent event, String fileName) throws IOException {
 
@@ -58,6 +79,12 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Creates an alert with given parameters
+     * @param alertType
+     * @param alertTitle
+     * @param alertMsg
+     */
     public static void makeAlert(Alert.AlertType alertType, String alertTitle, String alertMsg){
         Alert alert = new Alert(alertType);
         alert.setTitle(alertTitle);
@@ -65,6 +92,10 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
+    /**
+     * Main method to launch program
+     * @param args
+     */
     public static void main(String[] args) {
 
         launch();

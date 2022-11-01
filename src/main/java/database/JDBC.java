@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Abstract class to hold all queiries for database connection
+ */
 public abstract class JDBC extends Main{
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -24,6 +27,9 @@ public abstract class JDBC extends Main{
     private static String passWord = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    /**
+     * Opens the connection to database
+     */
     public static void openConnection()
     {
         try {
@@ -37,10 +43,16 @@ public abstract class JDBC extends Main{
         }
     }
 
+    /**
+     * @return connection
+     */
     public static Connection getConnection(){
         return connection;
     }
 
+    /**
+     * Closes connection to database
+     */
     public static void closeConnection() {
         try {
             connection.close();
@@ -52,12 +64,23 @@ public abstract class JDBC extends Main{
         }
     }
 
+    /**
+     * Validates log-in credentials, and writes result to file.
+     * @param username
+     * @param password
+     * @return boolean whether or not log-in was successful
+     * @throws IOException
+     */
     public static boolean validateLogin(String username, String password) throws IOException {
         FileWriter fw = new FileWriter("login_activity.txt", true);
         PrintWriter pw = new PrintWriter(fw);
         LocalDateTime logInDateTime = ZonedDateTime.now().toLocalDateTime();
         String logInTime = logInDateTime.toLocalDate() + " " + logInDateTime.toLocalTime().truncatedTo(ChronoUnit.SECONDS);
-
+        if(username.isEmpty() || password.isEmpty()){
+            pw.println(String.format("User %s successfully logged in at %s", username, logInTime));
+            pw.close();
+            return false;
+        }
         try{
             String sql = "SELECT * FROM users WHERE User_Name = ? AND Password = ?";
 

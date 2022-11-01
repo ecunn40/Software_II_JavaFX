@@ -18,6 +18,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the Customer form
+ */
 public class CustomerController extends Main implements Initializable {
 
     public static boolean addingCustomer = true;
@@ -39,6 +42,11 @@ public class CustomerController extends Main implements Initializable {
     @FXML
     private TableColumn division_id_column;
 
+    /**
+     * Initializes the customer table with all customers in the database
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -52,16 +60,33 @@ public class CustomerController extends Main implements Initializable {
         division_id_column.setCellValueFactory(new PropertyValueFactory<>("division_id"));
     }
 
+    /**
+     * Loads the previous form
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void LogOut(ActionEvent event) throws IOException {
         JDBC.closeConnection();
         loadFile(event, LOGIN_FORM);
     }
+
+    /**
+     * Sets the addCustomer variable and loads the Add Customer form
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void onAddButtonClicked(ActionEvent event) throws IOException {
         addingCustomer = true;
         loadFile(event, ADD_CUSTOMER_FORM);
     }
+
+    /**
+     * Sets the addCustomer variable, validates and loads the Add Customer form with the selected Customer
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void onUpdateButtonClicked(ActionEvent event) throws IOException {
         addingCustomer = false;
@@ -72,6 +97,11 @@ public class CustomerController extends Main implements Initializable {
             makeAlert(Alert.AlertType.ERROR, "No Customer Selected", "Please select a Customer");
         }
     }
+
+    /**
+     * Validates and deletes the selected customer from the database
+     * @throws SQLException
+     */
     @FXML
     public void onDeleteButtonClicked() throws SQLException {
             selectedCustomer = (Customer) customersTable.getSelectionModel().getSelectedItem();
@@ -85,6 +115,12 @@ public class CustomerController extends Main implements Initializable {
             }
         customersTable.setItems(CustomersQuery.getAllCustomers());
     }
+
+    /**
+     * Loads the Appointment form
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void onAppointmentsButtonClicked(ActionEvent event) throws IOException {
         loadFile(event, APPOINTMENT_FORM);

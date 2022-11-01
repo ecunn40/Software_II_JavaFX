@@ -27,6 +27,9 @@ import static controller.AppointmentController.addingAppointment;
 import static controller.AppointmentController.selectedAppointment;
 import static controller.CustomerController.selectedCustomer;
 
+/**
+ * Controller for the AddAppointment form
+ */
 public class AddAppointmentController extends Main implements Initializable {
     @FXML
     private Text appointmentText;
@@ -55,6 +58,11 @@ public class AddAppointmentController extends Main implements Initializable {
     @FXML
     private ComboBox userIdInput;
 
+    /**
+     * Initializes the Add Appointment form with given values or empty values if adding or updating an appointment
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if(!addingAppointment){
@@ -72,6 +80,9 @@ public class AddAppointmentController extends Main implements Initializable {
         setTime();
     }
 
+    /**
+     * Sets the Local Time hours according to Eastern Time business hours.
+     */
     private void setTime() {
         ZoneId easternZoneId = ZoneId.of("America/New_York");
         LocalDate date = ZonedDateTime.now().toLocalDate();
@@ -100,6 +111,11 @@ public class AddAppointmentController extends Main implements Initializable {
             localStartTime = localStartTime.plusHours(1);
         }
     }
+
+    /**
+     * Sets the start time 1 hour before the given end time, or sets the end time 1 hour after the given start time
+     * @param event
+     */
     @FXML
     private void onTimeChosen(ActionEvent event){
         ComboBox timePicker = (ComboBox) event.getTarget();
@@ -112,14 +128,26 @@ public class AddAppointmentController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Sets the start time 1 hour before the end time
+     * @param endTime
+     */
     private void setStartTime(LocalTime endTime) {
         startTime.setValue(endTime.minusHours(1));
     }
 
+    /**
+     * Sets the end time 1 hour after the start time
+     * @param startTime
+     */
     private void setEndTime(LocalTime startTime) {
         endTime.setValue(startTime.plusHours(1));
     }
 
+    /**
+     * Sets the start date equal to the given end date, or sets the end date equal to the given start date.
+     * @param event
+     */
     @FXML
     private void onDateChosen(ActionEvent event){
         DatePicker datePicker = (DatePicker) event.getSource();
@@ -129,6 +157,10 @@ public class AddAppointmentController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Sets all the field values based on the given appointment
+     * @param appointment
+     */
     private void setAppointmentData(Appointment appointment) {
         appointmentText.setText("Update Appointment");
         appointmentIdInput.setText(appointment.getAppointmentId() + "");
@@ -145,10 +177,20 @@ public class AddAppointmentController extends Main implements Initializable {
         userIdInput.setValue(AppointmentsQuery.getUserId(appointment.getUserId()));
     }
 
+    /**
+     * Cancels all changes and loads previous form
+     * @param event
+     * @throws IOException
+     */
     public void onCancelButtonClick(ActionEvent event) throws IOException {
         onCancelButtonClick(event, APPOINTMENT_FORM);
     }
 
+    /**
+     * Validates all given values, either inserts or updates appointments in the database, and loads the previous form
+     * @param event
+     * @throws IOException
+     */
     public void onSaveButtonClick(ActionEvent event) throws IOException{
         String title;
         String description;
@@ -178,9 +220,8 @@ public class AddAppointmentController extends Main implements Initializable {
                 AppointmentsQuery.updateAppointment(selectedAppointment.getAppointmentId(), title, description, location, type, appointmentStart, appointmentEnd, customerId, userId, contactId);
 
         } catch (Exception e){
-            e.printStackTrace();
+            return;
         }
         loadFile(event, APPOINTMENT_FORM);
-        System.out.println("Saved");
     }
 }

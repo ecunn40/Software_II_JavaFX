@@ -8,8 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Abstract class to hold all contact queries on the contacts table
+ */
 public abstract class ContactsQuery {
-
+    /**
+     * @return all contacts in contacts table
+     */
     public static ObservableList getAllContacts(){
         ObservableList<Contact> allContacts = FXCollections.observableArrayList();
         try{
@@ -32,6 +37,9 @@ public abstract class ContactsQuery {
         return allContacts;
     }
 
+    /**
+     * @return all contact names in contacts table
+     */
     public static ObservableList getAllContactNames(){
         ObservableList<String> allNames = FXCollections.observableArrayList();
         try{
@@ -51,6 +59,10 @@ public abstract class ContactsQuery {
         return allNames;
     }
 
+    /**
+     * @param contactId
+     * @return contact name with contact id
+     */
     public static String getContactName(int contactId){
         String name= "" ;
         try{
@@ -69,6 +81,10 @@ public abstract class ContactsQuery {
         return name;
     }
 
+    /**
+     * @param contactName
+     * @return contact id with given contact name
+     */
     public static int getContactId(String contactName){
         int contactId = 0;
         try{

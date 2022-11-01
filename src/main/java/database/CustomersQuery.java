@@ -9,10 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Abstract class to hold all queries on the customers table
+ */
 public abstract class CustomersQuery {
 
     public static int customerCount;
 
+    /**
+     * @return all customers in the customers table
+     */
     public static ObservableList getAllCustomers(){
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try {
@@ -41,6 +47,14 @@ public abstract class CustomersQuery {
         return allCustomers;
     }
 
+    /**
+     * Inserts the given customer into the customers table
+     * @param name
+     * @param address
+     * @param postalCode
+     * @param phoneNumber
+     * @param division_id
+     */
     public static void insertCustomer(String name, String address, String postalCode, String phoneNumber, int division_id){
         try {
             String sql = "INSERT INTO customers VALUES(NULL, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?)";
@@ -60,6 +74,15 @@ public abstract class CustomersQuery {
         }
     }
 
+    /**
+     * Updates the selected customer with given customer
+     * @param customerId
+     * @param name
+     * @param address
+     * @param postalCode
+     * @param phoneNumber
+     * @param division_id
+     */
     public static void updateCustomer(int customerId, String name, String address, String postalCode, String phoneNumber, int division_id){
         try {
             String sqlName = "UPDATE CUSTOMERS SET Customer_Name = ? WHERE Customer_ID = ?";
@@ -95,6 +118,11 @@ public abstract class CustomersQuery {
         }
     }
 
+    /**
+     * Deletes customer with given customer id
+     * @param customer_id
+     * @throws SQLException
+     */
     public static void deleteCustomer(int customer_id) throws SQLException {
         String sql = "DELETE FROM CUSTOMERS WHERE Customer_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -104,6 +132,9 @@ public abstract class CustomersQuery {
         resetAutoInc();
     }
 
+    /**
+     * @return all customer ids in the customers table
+     */
     public static ObservableList getCustomerIds() {
         ObservableList allCustomerIds = FXCollections.observableArrayList();
 

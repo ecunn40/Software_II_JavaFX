@@ -13,8 +13,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Abstract class to hold all database queries on the appointments table
+ */
 public abstract class AppointmentsQuery {
-
+    /**
+     * @return all appointments in appointments table
+     */
     public static ObservableList getAllAppointments(){
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         try{
@@ -46,6 +51,18 @@ public abstract class AppointmentsQuery {
         return allAppointments;
     }
 
+    /**
+     * Inserts given appointment in appointment table
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param appointmentStart
+     * @param appointmentEnd
+     * @param customerId
+     * @param userId
+     * @param contactId
+     */
     public static void insertAppointment(String title, String description, String location, String type, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerId, int userId, int contactId){
         try {
             String sql = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?)";
@@ -70,6 +87,19 @@ public abstract class AppointmentsQuery {
         }
     }
 
+    /**
+     * Updates appointment in database with given appointment.
+     * @param appointmentId
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param appointmentStart
+     * @param appointmentEnd
+     * @param customerId
+     * @param userId
+     * @param contactId
+     */
     public static void updateAppointment(int appointmentId, String title, String description, String location, String type, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerId, int userId, int contactId){
         try {
             String sqlTitle = "UPDATE APPOINTMENTS SET Title = ? WHERE Appointment_ID = ?";
@@ -129,6 +159,10 @@ public abstract class AppointmentsQuery {
         }
     }
 
+    /**
+     * @param appointmentId
+     * @return user id with matching appointment id
+     */
     public static int getUserId(int appointmentId) {
         int userId = 0;
         try{
@@ -147,6 +181,11 @@ public abstract class AppointmentsQuery {
         return userId;
     }
 
+    /**
+     * Deletes appointment with given appointment id
+     * @param appointmentId
+     * @throws SQLException
+     */
     public static void deleteAppointment(int appointmentId) throws SQLException {
         String sql = "DELETE FROM APPOINTMENTS WHERE Appointment_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -157,6 +196,11 @@ public abstract class AppointmentsQuery {
         resetAutoInc();
     }
 
+    /**
+     * Deletes appointment with given customer id
+     * @param customerId
+     * @throws SQLException
+     */
     public static void deleteCustomerAppointments(int customerId) throws SQLException {
         String sql = "DELETE FROM APPOINTMENTS WHERE Customer_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -165,12 +209,22 @@ public abstract class AppointmentsQuery {
         resetAutoInc();
     }
 
+    /**
+     * Resets the auto-increment to 1
+     * @throws SQLException
+     */
     public static void resetAutoInc() throws SQLException {
         String sql = "ALTER TABLE appointments AUTO_INCREMENT = 1";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.execute();
     }
+
+    /**
+     * @param button
+     * @return all dates ordered by either month or week based on the selected radio button
+     * @throws SQLException
+     */
     public static ObservableList getAllDateTimes(RadioButton button) throws SQLException {
         ObservableList sortedBy = FXCollections.observableArrayList();
         try {
@@ -206,6 +260,9 @@ public abstract class AppointmentsQuery {
         return sortedBy;
     }
 
+    /**
+     * @return all locations in the appointments table
+     */
     public static ObservableList getAllLocations() {
         ObservableList allLocations = FXCollections.observableArrayList();
         try{
@@ -225,6 +282,9 @@ public abstract class AppointmentsQuery {
         return allLocations;
     }
 
+    /**
+     * @return all types in the appointments table
+     */
     public static ObservableList getAllTypes() {
         ObservableList allTypes = FXCollections.observableArrayList();
         try{
@@ -244,6 +304,9 @@ public abstract class AppointmentsQuery {
         return allTypes;
     }
 
+    /**
+     * @return all months in the appointments table
+     */
     public static ObservableList getAllDates() {
         ObservableList allDates = FXCollections.observableArrayList();
         try{
@@ -263,6 +326,10 @@ public abstract class AppointmentsQuery {
         return allDates;
     }
 
+    /**
+     * @param locationSelection
+     * @return number of appointments at given location
+     */
     public static int getLocationCount(String locationSelection) {
         int count = 0;
         try{
@@ -281,6 +348,11 @@ public abstract class AppointmentsQuery {
         return count;
     }
 
+    /**
+     * @param type
+     * @param month
+     * @return number of appointments with given type and month
+     */
     public static int getApptByMonth(String type, String month){
         int count = 0;
         try{
@@ -301,6 +373,10 @@ public abstract class AppointmentsQuery {
         return count;
     }
 
+    /**
+     * @param contactId
+     * @return number of appointments with the given contact id
+     */
     public static ObservableList getContactAppointments(int contactId) {
         ObservableList allContactAppointments = FXCollections.observableArrayList();
         try {

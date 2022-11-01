@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * Controller class for Appointment form
+ */
 public class AppointmentController extends Main implements Initializable {
 
     @FXML
@@ -63,6 +66,11 @@ public class AppointmentController extends Main implements Initializable {
     private ObservableList allTypes = FXCollections.observableArrayList();
     private ObservableList allDates = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the table with all appointments from the database. Initializes the locations, types and dates in all appointments in seperate lists.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
@@ -86,31 +94,58 @@ public class AppointmentController extends Main implements Initializable {
         contactId_column.setCellValueFactory(new PropertyValueFactory<>("contactId"));
     }
 
+    /**
+     * @param list
+     * @return a distinct list with no repeating elements
+     */
     private ObservableList returnDistinct(ObservableList list){
         return (ObservableList) list.stream().distinct().collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
+    /**
+     * Updates the table to show all appointments
+     */
     @FXML
     private void showAllAppointments(){
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
     }
 
+    /**
+     * Sorts the table based on the radio button selected(Month or Week)
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     private void sortBy(ActionEvent event) throws SQLException {
         RadioButton button = (RadioButton) event.getSource();
         appointmentsTable.setItems(AppointmentsQuery.getAllDateTimes(button));
     }
 
+    /**
+     * Loads the previous form
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void onBackButtonPressed(ActionEvent event) throws IOException {
         loadFile(event, CUSTOMER_FORM);
     }
+
+    /**
+     * Sets the addingAppointment variable and loads the AddAppointment form.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void onAddButtonClicked(ActionEvent event) throws IOException {
         addingAppointment = true;
         loadFile(event, ADD_APPOINTMENT_FORM);
     }
 
+    /**
+     * Creates an alert with the number of appointments that are in the selected location
+     * @param event
+     */
     @FXML
     public void onLocationButtonClicked(ActionEvent event) {
         String locationSelection = (String) locationComboBox.getSelectionModel().getSelectedItem();
@@ -119,6 +154,10 @@ public class AppointmentController extends Main implements Initializable {
         makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format("There are %d appointments at %s", count, locationSelection));
     }
 
+    /**
+     * Creates an alert with the number of appointments that share the same type and month
+     * @param event
+     */
     @FXML
     public void onApptTypeClicked(ActionEvent event) {
         selectedType = (String) typeComboBox.getSelectionModel().getSelectedItem();
@@ -129,7 +168,10 @@ public class AppointmentController extends Main implements Initializable {
             makeAlert(Alert.AlertType.INFORMATION, "Appointments Found", String.format(" %s - %s - %d", selectedType, selectedMonth, count));
         }
     }
-
+    /**
+     * Creates an alert with the number of appointments that share the same type and month
+     * @param event
+     */
     @FXML
     public void onApptDateClicked(ActionEvent event) {
         selectedMonth = (String) dateComboBox.getSelectionModel().getSelectedItem();
@@ -141,6 +183,10 @@ public class AppointmentController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Sets the add appointment variable, validates the selected appointment and loads the next form
+     * @param event
+     */
     @FXML
     public void onUpdateButtonClicked(ActionEvent event) {
         addingAppointment = false;
@@ -151,6 +197,12 @@ public class AppointmentController extends Main implements Initializable {
             makeAlert(Alert.AlertType.ERROR, "No Appointment Selected", "Please select an Appointment");
         }
     }
+
+    /**
+     * Validates the given appointment, and deletes the appointment from the database
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     public void onDeleteButtonClicked(ActionEvent event) throws SQLException {
         selectedAppointment = (Appointment) appointmentsTable.getSelectionModel().getSelectedItem();
@@ -166,6 +218,10 @@ public class AppointmentController extends Main implements Initializable {
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
     }
 
+    /**
+     * Sets the table with the appointments that share the same contactId
+     * @param event
+     */
     public void onContactBoxClicked(ActionEvent event) {
         String selectedContact = (String) contactComboBox.getSelectionModel().getSelectedItem();
         ObservableList contactAppts = AppointmentsQuery.getContactAppointments(ContactsQuery.getContactId(selectedContact));
