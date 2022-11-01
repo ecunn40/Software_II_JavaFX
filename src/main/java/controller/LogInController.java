@@ -90,7 +90,9 @@ public class LogInController extends Main implements Initializable {
     }
 
     /**
-     * Checks for appointments within 15 minutes of log-in time, displaying messages based on the Locale.
+     * Checks for appointments within 15 minutes of log-in time, displaying messages based on the Locale
+     * Utilize lambda in a filter to check if each user appointment is 15 minutes within log in
+     * Utilize a second lambda to create an alert for the user whether or not there are any upcoming appointments
      */
     private void checkForAppointments(){
         ObservableList<Appointment> userAppointments = UsersQuery.getUserAppointments(UsersQuery.getUserId("test"));

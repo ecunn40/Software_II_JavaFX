@@ -121,8 +121,6 @@ public class AddCustomerController extends Main implements Initializable {
             phone = Exceptions.validateString(phoneInput);
             Exceptions.validateCountry(countryComboBox.getValue());
             division_id = Exceptions.getDivisionId(stateComboBox.getValue());
-            System.out.println("Selected State: "+ stateComboBox.getValue());
-            System.out.println("Division ID: "+ division_id);
 
             if(addingCustomer)
                 CustomersQuery.insertCustomer(customerName, address, postal_code, phone, division_id);
@@ -133,7 +131,6 @@ public class AddCustomerController extends Main implements Initializable {
             return;
         }
         loadFile(event, CUSTOMER_FORM);
-        System.out.println("Saved");
     }
 
 }
