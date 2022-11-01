@@ -35,7 +35,6 @@ public abstract class JDBC extends Main{
         try {
             Class.forName(driver); // Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, passWord); // Reference Connection object
-            System.out.println("Connection successful!");
         }
         catch(Exception e)
         {
@@ -56,7 +55,6 @@ public abstract class JDBC extends Main{
     public static void closeConnection() {
         try {
             connection.close();
-            System.out.println("Connection closed!");
         }
         catch(Exception e)
         {

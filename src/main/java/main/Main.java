@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 /**
  * Main class to hold general constants and methods to be used throughout the program
+ * @Author Evan Cunningham
  */
 public class Main extends Application {
 
