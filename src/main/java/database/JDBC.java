@@ -90,7 +90,6 @@ public abstract class JDBC extends Main{
             return true;
 
         } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
             pw.println(String.format("User %s gave invalid log-in at %s", username, logInTime));
             pw.close();
             return false;

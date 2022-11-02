@@ -56,6 +56,8 @@ public class AppointmentController extends Main implements Initializable {
     private ComboBox dateComboBox;
     @FXML
     private ComboBox contactComboBox;
+    @FXML
+    private ToggleGroup toggleGroup;
 
     public static boolean addingAppointment;
     public static Appointment selectedAppointment = null;
@@ -107,6 +109,8 @@ public class AppointmentController extends Main implements Initializable {
      */
     @FXML
     private void showAllAppointments(){
+        if(toggleGroup.getSelectedToggle() != null)
+            toggleGroup.getSelectedToggle().setSelected(false);
         appointmentsTable.setItems(AppointmentsQuery.getAllAppointments());
     }
 

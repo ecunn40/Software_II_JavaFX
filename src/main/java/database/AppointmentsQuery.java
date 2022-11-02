@@ -8,9 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.RadioButton;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -226,16 +224,23 @@ public abstract class AppointmentsQuery {
      * @throws SQLException
      */
     public static ObservableList getAllDateTimes(RadioButton button) throws SQLException {
+
         ObservableList sortedBy = FXCollections.observableArrayList();
+        int currentMonth = ZonedDateTime.now().getMonthValue();
         try {
-            String sql;
-            if(button.getId() == "monthButton")
-                sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments ORDER BY Month(Start)";
+            String sql = "";
+
+            if(button.getId().equals("monthButton"))
+                sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Month(Start) = ?";
             else
-                sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments ORDER BY Week(Start)";
+                sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Week(Start, 0) = Week(?, 0)";
 
 
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            if(button.getId().equals("monthButton"))
+                ps.setInt(1, currentMonth);
+            else
+                ps.setTimestamp(1, Timestamp.valueOf(ZonedDateTime.now().toLocalDateTime()));
 
             ResultSet rs = ps.executeQuery();
 
