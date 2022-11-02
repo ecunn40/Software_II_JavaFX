@@ -74,11 +74,7 @@ public abstract class JDBC extends Main{
         PrintWriter pw = new PrintWriter(fw);
         LocalDateTime logInDateTime = ZonedDateTime.now().toLocalDateTime();
         String logInTime = logInDateTime.toLocalDate() + " " + logInDateTime.toLocalTime().truncatedTo(ChronoUnit.SECONDS);
-        if(username.isEmpty() || password.isEmpty()){
-            pw.println(String.format("User %s successfully logged in at %s", username, logInTime));
-            pw.close();
-            return false;
-        }
+
         try{
             String sql = "SELECT * FROM users WHERE User_Name = ? AND Password = ?";
 
@@ -89,11 +85,12 @@ public abstract class JDBC extends Main{
 
             rs.next();
 
-            pw.println(String.format("User %s successfully logged in at %s", username, logInTime));
+            pw.println(String.format("User %s successfully logged in at %s", rs.getString(2), logInTime));
             pw.close();
             return true;
 
         } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
             pw.println(String.format("User %s gave invalid log-in at %s", username, logInTime));
             pw.close();
             return false;
